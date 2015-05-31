@@ -1,0 +1,74 @@
+doctype html
+html
+  head
+    title Quick Gallery
+    link(rel='stylesheet',type='text/css',href='vendor/bootstrap/dist/css/bootstrap.min.css')
+    link(rel='stylesheet',type='text/css',href='vendor/bootstrap/dist/css/bootstrap-theme.min.css')
+    link(rel='stylesheet',type='text/css',href='vendor/font-awesome/css/font-awesome.min.css')
+    link(rel='stylesheet',type='text/css',href='styles/app.css')
+  body
+    .navbar.navbar-default
+        .container-fluid
+            .navbar-header
+                button.navbar-toggle.collapsed(data-toggle="collapse",data-target="#navbar-collapse")
+                    span.sr-only Toggle navigation
+                    span.icon-bar
+                    span.icon-bar
+                    span.icon-bar
+                .navbar-brand QuickGallery
+            #navbar-collapse.collapse.navbar-collapse
+                ul.nav.navbar-nav
+                    li
+                        a(type="button",data-toggle="modal",data-target="#directories",href="javascript:")
+                            i.fa.fa-fw.fa-folder
+                            span Directories
+    #directory.container-fluid
+        .row
+            .col-sm-12
+            form.navbar-form
+                ol.title.breadcrumb
+        .content.row
+            .col-sm-12
+                ul.directories.nav.nav-pills
+        .content.row
+            .col-sm-12
+                ul.pictures.nav.nav-pills
+    #directories.modal.fade
+        .modal-dialog
+            .modal-content
+                .modal-header
+                    button.close(type="button",data-dismiss="modal")
+                        span &times;
+                    h4 Directories
+                .modal-body
+                    ul.tree
+    #picture.modal.fade
+        .modal-dialog
+            .modal-content
+                .modal-header
+                    h4
+                        span.title
+                        div.small.pull-right
+                            span.currentPicIndex
+                            span /
+                            span.picsCounter
+                            span= " "
+                            a.text-muted(href="javascript:",data-dismiss="modal")
+                                i.fa.fa-times
+                .modal-body
+                    img.img-responsive
+                .modal-footer
+                    a.download.btn.btn-default(target="_blank")
+                        i.fa.fa-fw.fa-download
+                    button.previous.btn.btn-default(type="button")
+                        i.fa.fa-fw.fa-chevron-left
+                    button.next.btn.btn-default(type="button")
+                        i.fa.fa-fw.fa-chevron-right
+    script(src='vendor/jquery/dist/jquery.min.js')
+    script(src='vendor/bootstrap/dist/js/bootstrap.min.js')
+    script(src='vendor/director/build/director.min.js')
+    script(src="scripts/utils.js")
+    script(src="scripts/directoriesView.js")
+    script(src="scripts/directoryView.js")
+    script(src="scripts/pictureView.js")
+    script(src="scripts/app.js")

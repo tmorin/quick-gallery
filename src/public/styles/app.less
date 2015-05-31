@@ -1,0 +1,68 @@
+@import "../../../node_modules/bootstrap/less/variables.less";
+
+html,body {
+    height: 100%;
+}
+
+.nav.nav-pills {
+    li {
+        display: inline-block;
+        margin: 0.5rem 0;
+        padding: 0;
+        width: 13rem;
+        height: 10rem;
+        text-align: center;
+        a {
+            display: inline-block;
+            margin: auto;
+            padding: 0.5rem;
+            .picture {
+                display: inline-block;
+                text-align: center;
+                position: relative;
+                height: 7rem;
+                line-height: 7rem;
+                .fa {
+                    display: inline-block;
+                    line-height: 7rem;
+                }
+                .img-thumbnail {
+                    vertical-align:middle;
+                    display: inline-block;
+                    margin: 0;
+                    padding: 0;
+                    max-height: 7rem;
+                }
+            }
+            .legend {
+                display: inline-block;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                overflow: hidden;
+                width: 12rem;
+                height: 2rem;
+                line-height: 2rem;
+            }
+        }
+    }
+}
+
+#picture {
+    margin: 0;
+    padding: 10px ! important;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    .modal-dialog {
+        margin: 0;
+        padding: 0;
+        .modal-content {
+            .modal-body {
+                text-align: center;
+                    vertical-align: middle;
+                img {
+                    margin: auto;
+                }
+            }
+        }
+    }
+}
