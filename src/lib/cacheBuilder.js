@@ -1,130 +1,100 @@
-import glob from 'glob';
+import util from 'util';
+import fs from 'fs';
 import mkdirp from 'mkdirp';
 import rimraf from 'rimraf';
-import fs from 'fs';
-import util from 'util';
-import lwip from 'lwip';
-import * as C from './constants';
+import async from 'async';
+import glob from 'glob';
+import C from './constants';
+import processPicture from './processPicture';
 
-function resolveScale(w, h, maxW, maxH) {
-    var scale = 1;
-    var wScale = scale;
-    var hScale = scale;
-    if (w > maxW) {
-        wScale = maxW / w;
-    }
-    if (h > maxH) {
-        hScale = maxH / h;
-    }
-    if (wScale < scale || hScale < scale) {
-        scale = wScale > hScale ? hScale : wScale;
-    }
-    return scale;
-}
-
-export function scaleImage(image, destPath, maxW, maxH, stats) {
+export function prepare() {
     return new Promise((resolve, reject) => {
-        var w = image.width();
-        var h = image.height();
-        var scale = resolveScale(w, h, maxW, maxH);
-        image.batch().scale(scale, scale).writeFile(destPath, function (error) {
-            if (error) {
-                util.error(error);
-            }
-            resolve(destPath);
-        });
-    });
-}
-
-export function openImage(picPath) {
-    return new Promise((resolve, reject) => {
-        lwip.open(picPath, (error, image) => {
-            if (error) {
-                reject(error);
-            } else {
-                resolve(image);
-            }
-        });
-    });
-}
-
-function processPicture(picPath, thumbnailPath, stats) {
-    return openImage(picPath)
-        .then((image) => scaleImage(image, thumbnailPath, C.THUMBNAIL_MAX_WIDTH, C.THUMBNAIL_MAX_HEIGHT, stats))
-        .then((destPath) => {
-            util.log(util.format('%s/%s - %s written!', --stats.remaingOps, stats.totalOps, destPath));
-            return destPath;
-        })
-        .then(null, (error) => util.error(error));
-}
-
-function wrapper(picPath, thumbnailPath, stats) {
-    return () => processPicture(picPath, thumbnailPath, stats);
-}
-
-export function prepareFs(file) {
-    var parts = file.split('/');
-    parts.pop();
-    var picDir = parts.join('/');
-    mkdirp.sync(C.THUMBNAIL_DIR + picDir);
-    var picPath = C.PICS_DIR + file;
-    var thumbnailPath = C.THUMBNAIL_DIR + file;
-    return [picPath, thumbnailPath];
-}
-
-export function buildCache(params) {
-    return new Promise((resolve, reject) => {
-        util.log('------------');
-
-        if (params.clean) {
-            util.log(util.format('cleaning %s', C.CACHE_DIR));
-            rimraf.sync(C.CACHE_DIR);
-            util.log('cleaning done!');
-            util.log('------------');
+        try {
+            util.log(util.format('prepare %s', C.CACHE_DIR));
+            mkdirp.sync(C.THUMBNAIL_DIR);
+            mkdirp.sync(C.ADAPTED_DIR);
+            util.log('preapre done!');
+            resolve();
+        } catch (e) {
+            reject(e);
         }
+    });
+}
 
-        glob('**/*.{jpg,png,gif}', {
+export function clean() {
+    return new Promise((resolve, reject) => {
+        try {
+            util.log(util.format('clean %s', C.CACHE_DIR));
+            rimraf.sync(C.CACHE_DIR);
+            util.log('clean done!');
+            resolve();
+        } catch (e) {
+            reject(e);
+        }
+    });
+}
+
+export function listAllPictures() {
+    return new Promise((resolve, reject) => {
+        util.log(util.format('list pictures from %s', C.PICS_DIR));
+        glob('**/*.{jpg,jpeg,png,gif,tif,tiff,bmp,dib,webp}', {
             cwd: C.PICS_DIR,
             nodir: true
-        }, function (er, files) {
-            if (er) {
-                throw er;
-            }
-            var stats = {
-                totalOps: files.length,
-                remaingOps: files.length
-            };
-            util.log(util.format('%s operations to do!', stats.totalOps));
-            var pPromise;
-            var chunk = 0;
-            files.forEach(function (file, fileIndex) {
-                chunk++;
-                var [picPath, thumbnailPath] = prepareFs(file);
-                if (params.update) {
-                    var thumbnailStats = fs.lstatSync(thumbnailPath);
-                    if (thumbnailStats.isFile()) {
-                        --stats.remaingOps;
-                        --stats.remaingOps;
-                        return;
-                    }
-                }
-
-                if (pPromise) {
-                    if (chunk < C.CACHE_BUILDER_CHUNK_SIZE) {
-                        pPromise.then(wrapper(picPath, thumbnailPath, stats));
-                    } else {
-                        chunk = 0;
-                        pPromise = pPromise.then(wrapper(picPath, thumbnailPath, stats));
-                    }
-                } else {
-                    pPromise = processPicture(picPath, thumbnailPath, stats);
-                }
-            });
-            if (pPromise) {
-                pPromise.then(() => util.log('operations done!')).then(resolve, reject);
+        }, function (e, pictures) {
+            if (e) {
+                reject(e);
             } else {
-                resolve();
+                util.log('list done!');
+                resolve(pictures);
             }
         });
+    });
+}
+
+function processPictures(pictures, baseDestPath, width, height) {
+    var total = pictures.length;
+    var done = 0;
+    var processPictureWrapper = (item, callback) => {
+        var picPath = C.PICS_DIR + item;
+        var destPath = baseDestPath + item;
+        ++done;
+        util.log(util.format('%s/%s - process %s', total, done, destPath));
+        fs.lstat(destPath, (err) => {
+            if (err) {
+                processPicture(picPath, destPath, width, height).then(() => {
+                    util.log(util.format('%s/%s - %s successfully processed!', total, done, destPath));
+                    callback();
+                }, (err) => {
+                    util.error(util.format('%s/%s - %s not processed: %s', total, done, destPath, err));
+                    callback(err);
+                });
+            } else {
+                callback();
+            }
+        });
+    };
+    return new Promise(function (resolve, reject) {
+        var q = async.queue(processPictureWrapper, C.CACHE_BUILDER_WORKERS);
+        q.drain = () => {
+            q.kill();
+            resolve();
+        };
+        q.push(pictures);
+    });
+}
+
+export function processThumbnails(pictures) {
+    util.log(util.format('process %s thumbnails', pictures.length));
+    return processPictures(pictures, C.THUMBNAIL_DIR, C.THUMBNAIL_MAX_WIDTH, C.THUMBNAIL_MAX_HEIGHT).then(() => {
+        util.log(util.format('%s thumbnails processed!', pictures.length));
+        return pictures;
+    });
+}
+
+export function processAdapted(pictures) {
+    util.log(util.format('process adapted (%s)', pictures.length));
+    return processPictures(pictures, C.ADAPTED_DIR, C.ADAPTED_MAX_WIDTH, C.ADAPTED_MAX_HEIGHT).then(() => {
+        util.log(util.format('%s adapted processed!', pictures.length));
+        return pictures;
     });
 }

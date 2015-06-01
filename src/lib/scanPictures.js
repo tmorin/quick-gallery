@@ -1,5 +1,33 @@
 import glob from 'glob';
+/*
+function listDirectories(cwd) {
+    return new Promise((resolve, reject) => {
+        glob('*/', {
+            cwd: cwd
+        }, function (error, directories) {
+            if (error) {
+                reject(error);
+            } else {
+                resolve(directories);
+            }
+        });
+    });
+}
 
+function listPictures(cwd) {
+    return new Promise((resolve, reject) => {
+        glob('*.{jpg,jpeg,png,gif,tif,tiff,bmp,dib,webp}', {
+            cwd: cwd
+        }, function (error, pictures) {
+            if (error) {
+                reject(error);
+            } else {
+                resolve(pictures);
+            }
+        });
+    });
+}
+*/
 function list(cwd, path, name, entries) {
 
     return new Promise((resolve, reject) => {
@@ -28,7 +56,7 @@ function list(cwd, path, name, entries) {
         });
 
         var picPromise = new Promise((resolvePic, rejectPic) => {
-            glob('*.{bmp,jpg,png,tif,gif,raw}', {
+            glob('*.{jpg,jpeg,png,gif,tif,tiff,bmp,dib,webp}', {
                 cwd: cwd
             }, function (error, subPicNames) {
                 if (error) {
