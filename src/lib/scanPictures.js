@@ -1,5 +1,5 @@
 import glob from 'glob';
-/*
+
 function listDirectories(cwd) {
     return new Promise((resolve, reject) => {
         glob('*/', {
@@ -27,7 +27,7 @@ function listPictures(cwd) {
         });
     });
 }
-*/
+
 function list(cwd, path, name, entries) {
 
     return new Promise((resolve, reject) => {
@@ -40,37 +40,21 @@ function list(cwd, path, name, entries) {
         };
         entries.push(entry);
 
-        var dirPromise = new Promise((resolveDir, rejectDir) => {
-            glob('*/', {
-                cwd: cwd
-            }, function (error, subDirNames) {
-                if (error) {
-                    rejectDir(error);
-                } else {
-                    var promises = subDirNames.map(function (subDirName) {
-                        return list(cwd + subDirName, path + subDirName, subDirName.substring(0, subDirName.length - 1), entry.directories);
-                    });
-                    Promise.all(promises).then(resolveDir, rejectDir);
-                }
+        var dirPromise = listDirectories(cwd).then((subDirNames) => {
+            var promises = subDirNames.map(function (subDirName) {
+                return list(cwd + subDirName, path + subDirName, subDirName.substring(0, subDirName.length - 1), entry.directories);
             });
+            return Promise.all(promises);
         });
 
-        var picPromise = new Promise((resolvePic, rejectPic) => {
-            glob('*.{jpg,jpeg,png,gif,tif,tiff,bmp,dib,webp}', {
-                cwd: cwd
-            }, function (error, subPicNames) {
-                if (error) {
-                    rejectPic(error);
-                } else {
-                    entry.pictures = subPicNames.map(function (subPicName) {
-                        return {
-                            path: path + subPicName,
-                            name: subPicName
-                        };
-                    });
-                    resolvePic(entry);
-                }
+        var picPromise = listPictures(cwd).then((subPicNames) => {
+            entry.pictures = subPicNames.map(function (subPicName) {
+                return {
+                    path: path + subPicName,
+                    name: subPicName
+                };
             });
+            return entry;
         });
 
         Promise.all([dirPromise, picPromise]).then(() => resolve(entries), reject);
