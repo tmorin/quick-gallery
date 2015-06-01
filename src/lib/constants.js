@@ -10,7 +10,7 @@ var constants = {
     THUMBNAIL_MAX_WIDTH: 120,
     THUMBNAIL_MAX_HEIGHT: 120,
     CACHE_BUILDER_WORKERS: os.cpus().length,
-    APP_PATH: null,
+    IMAGEMAGICK_PATH: null,
     HTTP_PORT: 4000
 };
 
@@ -29,8 +29,8 @@ if (!values.PICS_DIR) {
     errors.push('QUICK_GALLERY_PICS_DIR is not defined!');
 }
 
-if (!values.APP_PATH) {
-    errors.push('QUICK_GALLERY_APP_PATH is not defined!');
+if (!values.IMAGEMAGICK_PATH) {
+    errors.push('QUICK_GALLERY_IMAGEMAGICK_PATH is not defined!');
 }
 
 if (errors.length > 0) {
@@ -39,7 +39,7 @@ if (errors.length > 0) {
 
 values.CACHE_DIR = path.normalize(values.CACHE_DIR + '/').replace(/\\/g, '/');
 values.PICS_DIR = path.normalize(values.PICS_DIR + '/').replace(/\\/g, '/');
-values.APP_PATH = path.normalize(values.APP_PATH + '/').replace(/\\/g, '/');
+values.IMAGEMAGICK_PATH = path.normalize(values.IMAGEMAGICK_PATH + '/').replace(/\\/g, '/');
 values.THUMBNAIL_DIR = values.CACHE_DIR + 'thumbnail/';
 values.ADAPTED_DIR = values.CACHE_DIR + 'adapted/';
 

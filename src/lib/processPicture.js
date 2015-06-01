@@ -5,7 +5,7 @@ import _gm from 'gm';
 
 var gm = _gm.subClass({
     imageMagick: true,
-    appPath: C.APP_PATH
+    appPath: C.IMAGEMAGICK_PATH
 });
 
 function resolveScale(w, h, maxW, maxH) {

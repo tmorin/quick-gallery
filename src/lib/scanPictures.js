@@ -31,7 +31,6 @@ function listPictures(cwd) {
 function list(cwd, path, name, entries) {
 
     return new Promise((resolve, reject) => {
-
         var entry = {
             path: path,
             name: name,
