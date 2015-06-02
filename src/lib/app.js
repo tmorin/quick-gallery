@@ -1,16 +1,28 @@
-import express from 'express';
-import scanPictures from './scanPictures';
-import * as cacheBuilder from './cacheBuilder';
-import * as C from './constants';
-import path from 'path';
 import fs from 'fs';
+import path from 'path';
 import util from 'util';
+import stream from 'stream';
+import express from 'express';
+import bodyParser from 'body-parser';
+import intercept from 'intercept-stdout';
+
+import C from './config';
+import scanPictures from './scanPictures';
+import * as spawnCacheBuilder from './spawnCacheBuilder';
+import * as cacheBuilder from './cacheBuilder';
+
+fs.writeFileSync(C.CACHE_BUILDER_OUTPUT_FILE, '');
 
 var app = express();
 export default app;
 
 app.set('views', 'views');
 app.set('view engine', 'jade');
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
 
 app.use(express.static(__dirname + '/../public'));
 app.use('/vendor', express.static('node_modules/'));
@@ -24,6 +36,41 @@ app.get('/api/pictures', (req, res) => {
     );
 });
 
+app.post('/api/cache', (req, res) => {
+    spawnCacheBuilder.start(req.body).then((code) => {
+        util.console('code' + code);
+    }, (code) => {
+        util.error('code' + code);
+    });
+    res.sendStatus(202);
+});
+
+app.get('/api/cache', (req, res) => {
+    if (spawnCacheBuilder.isBusy()) {
+        res.send('cache builder is working');
+    } else {
+        res.send('cache builder is not working');
+    }
+});
+
+app.delete('/api/cache', (req, res) => {
+    spawnCacheBuilder.stop().then(() => {
+        res.sendStatus(202);
+    }, (error) => {
+        res.sendStatus(202);
+    });
+});
+
+app.get('/api/console', (req, res) => {
+    res.status(200).set({
+        'content-type': 'text/event-stream'
+    });
+    var unhook = intercept((data) => res.write(data));
+    res.on('close', () => {
+        unhook();
+    });
+});
+
 app.get('/thumbnail/(*)', (req, res) => {
     var thumbnailPath = path.join(C.THUMBNAIL_DIR, req.params[0]);
     fs.lstat(thumbnailPath, function (error, stat) {
@@ -34,7 +81,7 @@ app.get('/thumbnail/(*)', (req, res) => {
                 });
             }, () => {
                 util.error(error);
-                res.send(500);
+                res.sendStatus(500);
             });
         } else {
             res.sendFile(req.params[0], {
@@ -54,7 +101,7 @@ app.get('/adapted/(*)', (req, res) => {
                 });
             }, () => {
                 util.error(error);
-                res.send(500);
+                res.sendStatus(500);
             });
         } else {
             res.sendFile(req.params[0], {

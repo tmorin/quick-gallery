@@ -1,6 +1,6 @@
 import mkdirp from 'mkdirp';
 import path from 'path';
-import C from './constants';
+import C from './config';
 import _gm from 'gm';
 
 var gm = _gm.subClass({

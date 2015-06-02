@@ -1,51 +1,51 @@
 {
-  "name": "quick-gallery",
-  "version": "0.0.0",
-  "description": "Quick gallery",
-  "main": "index.js",
-  "keywords": [
-    "gallery"
-  ],
-  "homepage": "https://github.com/tmorin/quick-gallery",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/tmorin/quick-gallery.git"
-  },
-  "bugs": {
-    "url": "https://github.com/tmorin/quick-gallery/issues"
-  },
-  "licenses": [
-    {
-      "type": "MIT",
-      "url": "https://github.com/tmorin/quick-gallery/blob/master/LICENSE"
+    "name": "quick-gallery",
+    "version": "0.0.0",
+    "description": "Quick gallery",
+    "main": "bin/qgServer.js",
+    "keywords": [
+        "gallery"
+    ],
+    "homepage": "https://github.com/tmorin/quick-gallery",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/tmorin/quick-gallery.git"
+    },
+    "bugs": {
+        "url": "https://github.com/tmorin/quick-gallery/issues"
+    },
+    "licenses": [{
+        "type": "MIT",
+        "url": "https://github.com/tmorin/quick-gallery/blob/master/LICENSE"
+    }],
+    "author": "",
+    "scripts": {
+        "build": "gulp build",
+        "start": "node bin/qgServer.js"
+    },
+    "license": "MIT",
+    "devDependencies": {
+        "babel": "^5.4.7",
+        "gulp": "^3.8.11",
+        "gulp-babel": "^5.1.0",
+        "gulp-less": "^3.0.3",
+        "gulp-plumber": "^1.0.1"
+    },
+    "dependencies": {
+        "async": "^1.1.0",
+        "body-parser": "^1.12.4",
+        "bootstrap": "^3.3.4",
+        "director": "^1.2.8",
+        "express": "^4.12.4",
+        "font-awesome": "^4.3.0",
+        "glob": "^5.0.10",
+        "gm": "^1.18.1",
+        "intercept-stdout": "^0.1.1",
+        "jade": "^1.10.0",
+        "jquery": "^2.1.4",
+        "minimist": "^1.1.1",
+        "mkdirp": "^0.5.1",
+        "rimraf": "^2.3.4",
+        "walk": "^2.3.9"
     }
-  ],
-  "author": "",
-  "scripts": {
-    "build": "gulp build",
-    "start": "node index.js"
-  },
-  "license": "MIT",
-  "devDependencies": {
-    "babel": "^5.4.7",
-    "gulp": "^3.8.11",
-    "gulp-babel": "^5.1.0",
-    "gulp-less": "^3.0.3",
-    "gulp-plumber": "^1.0.1"
-  },
-  "dependencies": {
-    "async": "^1.1.0",
-    "bootstrap": "^3.3.4",
-    "director": "^1.2.8",
-    "express": "^4.12.4",
-    "font-awesome": "^4.3.0",
-    "glob": "^5.0.10",
-    "gm": "^1.18.1",
-    "jade": "^1.10.0",
-    "jquery": "^2.1.4",
-    "minimist": "^1.1.1",
-    "mkdirp": "^0.5.1",
-    "rimraf": "^2.3.4",
-    "walk": "^2.3.9"
-  }
 }

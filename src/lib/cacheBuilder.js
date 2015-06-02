@@ -4,7 +4,7 @@ import mkdirp from 'mkdirp';
 import rimraf from 'rimraf';
 import async from 'async';
 import glob from 'glob';
-import C from './constants';
+import C from './config';
 import processPicture from './processPicture';
 
 export function prepare() {
@@ -13,7 +13,7 @@ export function prepare() {
             util.log(util.format('prepare %s', C.CACHE_DIR));
             mkdirp.sync(C.THUMBNAIL_DIR);
             mkdirp.sync(C.ADAPTED_DIR);
-            util.log('preapre done!');
+            util.log('prepare done!');
             resolve();
         } catch (e) {
             reject(e);
@@ -21,12 +21,19 @@ export function prepare() {
     });
 }
 
-export function clean() {
+export function clean(thumbnails, adapted) {
     return new Promise((resolve, reject) => {
         try {
-            util.log(util.format('clean %s', C.CACHE_DIR));
-            rimraf.sync(C.CACHE_DIR);
-            util.log('clean done!');
+            if (thumbnails) {
+                util.log(util.format('clean %s', C.THUMBNAIL_DIR));
+                rimraf.sync(C.THUMBNAIL_DIR);
+                util.log('clean done!');
+            }
+            if (adapted) {
+                util.log(util.format('clean %s', C.ADAPTED_DIR));
+                rimraf.sync(C.ADAPTED_DIR);
+                util.log('clean done!');
+            }
             resolve();
         } catch (e) {
             reject(e);

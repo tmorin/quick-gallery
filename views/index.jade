@@ -19,9 +19,13 @@ html
             #navbar-collapse.collapse.navbar-collapse
                 ul.nav.navbar-nav
                     li
-                        a(type="button",data-toggle="modal",data-target="#directories",href="javascript:")
+                        a(type="button",data-toggle="modal",data-target="#directories",href="")
                             i.fa.fa-fw.fa-folder
                             span Directories
+                    li
+                        a(type="button",data-toggle="modal",data-target="#admin",href="")
+                            i.fa.fa-fw.fa-gear
+                            span Admin
     #directory.container-fluid
         .row
             .col-sm-12
@@ -33,15 +37,53 @@ html
         .content.row
             .col-sm-12
                 ul.pictures.nav.nav-pills
+    #admin.modal.fade
+      .modal-dialog
+        .modal-content
+          .modal-header
+            button.close(type="button",data-dismiss="modal")
+              span &times;
+            h4 Admin
+          .modal-body
+            .panel.panel-default
+              .panel-heading Cache builder
+              .panel-body
+                form(name="adminForm")
+                  .row
+                    .col-md-4.text-center
+                      .checkbox
+                        label
+                          input(type="checkbox",name="clean")
+                          span clean
+                    .col-md-4.text-center
+                      .checkbox
+                        label
+                          input(type="checkbox",name="thumbnails")
+                          span thumbnails
+                    .col-md-4.text-center
+                      .checkbox
+                        label
+                          input(type="checkbox",name="adapted")
+                          span adapted
+                  .row
+                    .col-md-4.text-center
+                      button.btn.btn-primary.start(type="button") Start
+                    .col-md-4.text-center
+                      button.btn.btn-danger.stop(type="button") Stop
+                    .col-md-4.text-center
+                      button.btn.btn-default.status(type="button") Status
+                      div
+                        .label.label-default.strong.status
+            .iframe-container
     #directories.modal.fade
-        .modal-dialog
-            .modal-content
-                .modal-header
-                    button.close(type="button",data-dismiss="modal")
-                        span &times;
-                    h4 Directories
-                .modal-body
-                    ul.tree
+      .modal-dialog
+        .modal-content
+          .modal-header
+            button.close(type="button",data-dismiss="modal")
+              span &times;
+            h4 Directories
+          .modal-body
+            ul.tree
     #picture.modal.fade
         .modal-dialog
             .modal-content
@@ -56,7 +98,7 @@ html
                             a.text-muted(href="javascript:",data-dismiss="modal")
                                 i.fa.fa-times
                 .modal-body
-                    img.img-responsive
+                    img.img-responsive.img-rounded
                 .modal-footer
                     a.download.btn.btn-default(target="_blank")
                         i.fa.fa-fw.fa-download
@@ -71,4 +113,5 @@ html
     script(src="scripts/directoriesView.js")
     script(src="scripts/directoryView.js")
     script(src="scripts/pictureView.js")
+    script(src="scripts/adminView.js")
     script(src="scripts/app.js")

@@ -4,11 +4,13 @@ import {fadeIn, fadeOut, findDirectory} from './utils';
 import * as directoriesView from './directoriesView';
 import * as directoryView from './directoryView';
 import * as pictureView from './pictureView';
+import * as adminView from './adminView';
 
 $.getJSON('./api/pictures').then(function (directories) {
 
     directoriesView.render($('#directories'), directories);
     pictureView.render($('#picture'));
+    adminView.render($('#admin'));
 
     var router = new Router({
 
