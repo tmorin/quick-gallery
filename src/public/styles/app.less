@@ -47,36 +47,32 @@ html,body {
     }
 }
 
-#picture {
+.expanded {
     margin: 0;
     padding: 10px ! important;
-    overflow-x: hidden;
-    overflow-y: hidden;
+    overflow-x: hidden ! important;
+    overflow-y: hidden ! important;
     .modal-dialog {
         margin: 0;
         padding: 0;
         .modal-content {
-            .modal-body {
-                text-align: center;
-                    vertical-align: middle;
-                img {
-                    margin: auto;
-                }
-            }
         }
     }
 }
 
-#admin {
-    .modal-dialog {
-        .modal-content {
-            .modal-body {
-                .iframe-container {
-                    iframe {
-                        width: 100%;
-                    }
-                }
-            }
+#picture {
+    .modal-body {
+        text-align: center;
+        vertical-align: middle;
+        img {
+            margin: auto;
         }
+    }
+}
+
+#adminServerLogs {
+    pre {
+        overflow: auto;
+        word-wrap: normal;
     }
 }

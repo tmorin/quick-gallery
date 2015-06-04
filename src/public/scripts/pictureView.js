@@ -1,29 +1,12 @@
 import * as $ from 'jQuery';
-import {fadeIn} from './utils';
+import {fadeIn, fixAndGetModalBodyHeight, fixAndGetModalBodyWidth} from './utils';
 
 export function render($view) {
+    var $img = $view.find('.modal-body img');
 
     function resize() {
-        var $modal = $view;
-        var $dialog = $view.find('.modal-dialog');
-        var $header = $view.find('.modal-header');
-        var $body = $view.find('.modal-body');
-        var $img = $view.find('.modal-body img');
-        var $footer = $view.find('.modal-footer');
-
-        var windowHeight = $modal.height();
-        $dialog.outerHeight(windowHeight);
-
-        var windowWidth = $modal.width();
-        $dialog.outerWidth(windowWidth);
-
-        var contentHeight = $dialog.height();
-        var headerHeight = $header.outerHeight();
-        var footerHeight = $footer.outerHeight();
-        var bodyHeight = contentHeight - headerHeight - footerHeight;
-
-        $body.outerHeight(bodyHeight);
-        $img.css('max-height', $body.height());
+        fixAndGetModalBodyWidth($view);
+        $img.css('max-height', fixAndGetModalBodyHeight($view));
     }
 
     $(document).delegate('[data-toggle=gallery]', 'click', function (event) {

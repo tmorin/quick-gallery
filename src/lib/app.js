@@ -1,17 +1,15 @@
 import fs from 'fs';
 import path from 'path';
-import util from 'util';
 import stream from 'stream';
+import winston from 'winston';
 import express from 'express';
 import bodyParser from 'body-parser';
-import intercept from 'intercept-stdout';
 
+import L from './logger';
 import C from './config';
 import scanPictures from './scanPictures';
 import * as spawnCacheBuilder from './spawnCacheBuilder';
 import * as cacheBuilder from './cacheBuilder';
-
-fs.writeFileSync(C.CACHE_BUILDER_OUTPUT_FILE, '');
 
 var app = express();
 export default app;
@@ -36,38 +34,32 @@ app.get('/api/pictures', (req, res) => {
     );
 });
 
-app.post('/api/cache', (req, res) => {
-    spawnCacheBuilder.start(req.body).then((code) => {
-        util.console('code' + code);
-    }, (code) => {
-        util.error('code' + code);
-    });
-    res.sendStatus(202);
-});
-
 app.get('/api/cache', (req, res) => {
-    if (spawnCacheBuilder.isBusy()) {
-        res.send('cache builder is working');
-    } else {
-        res.send('cache builder is not working');
-    }
+    res.json({
+        busy: spawnCacheBuilder.isBusy()
+    });
 });
 
-app.delete('/api/cache', (req, res) => {
-    spawnCacheBuilder.stop().then(() => {
+app.post('/api/cache', (req, res) => {
+    spawnCacheBuilder.start(req.body).then(() => {
         res.sendStatus(202);
     }, (error) => {
         res.sendStatus(202);
     });
 });
 
-app.get('/api/console', (req, res) => {
-    res.status(200).set({
-        'content-type': 'text/event-stream'
+app.delete('/api/cache', (req, res) => {
+    spawnCacheBuilder.stop().then(() => {
+        res.sendStatus(202);
+    }, (error) => {
+        L.error(error);
+        res.sendStatus(202);
     });
-    var unhook = intercept((data) => res.write(data));
-    res.on('close', () => {
-        unhook();
+});
+
+app.get('/api/logs', (req, res) => {
+    res.sendFile(L.transports['all-file'].filename, {
+        root: C.LOG_DIR
     });
 });
 
@@ -80,7 +72,7 @@ app.get('/thumbnail/(*)', (req, res) => {
                     root: C.THUMBNAIL_DIR
                 });
             }, () => {
-                util.error(error);
+                L.error(error);
                 res.sendStatus(500);
             });
         } else {
@@ -100,7 +92,7 @@ app.get('/adapted/(*)', (req, res) => {
                     root: C.ADAPTED_DIR
                 });
             }, () => {
-                util.error(error);
+                L.error(error);
                 res.sendStatus(500);
             });
         } else {

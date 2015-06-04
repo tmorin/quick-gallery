@@ -2,6 +2,7 @@ import mkdirp from 'mkdirp';
 import path from 'path';
 import C from './config';
 import _gm from 'gm';
+import L from './logger';
 
 var gm = _gm.subClass({
     imageMagick: true,

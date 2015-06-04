@@ -1,4 +1,3 @@
-import util from 'util';
 import path from 'path';
 import os from 'os';
 import parseArgs from 'minimist';
@@ -12,7 +11,8 @@ var CONSTANTS = {
     THUMBNAIL_MAX_HEIGHT: 120,
     CACHE_BUILDER_WORKERS: os.cpus().length,
     IMAGEMAGICK_PATH: null,
-    HTTP_PORT: 4000
+    HTTP_PORT: 4000,
+    LOG_FILENAME: 'quick-gallery.log'
 };
 
 function resolveValueFromEnv(defaultValues) {
@@ -59,10 +59,7 @@ values.PICS_DIR = path.normalize(values.PICS_DIR + '/').replace(/\\/g, '/');
 values.IMAGEMAGICK_PATH = path.normalize(values.IMAGEMAGICK_PATH + '/').replace(/\\/g, '/');
 values.THUMBNAIL_DIR = values.CACHE_DIR + 'thumbnail/';
 values.ADAPTED_DIR = values.CACHE_DIR + 'adapted/';
-values.CACHE_BUILDER_OUTPUT_FILE = path.join(values.CACHE_DIR, 'cache_builder_output_file.txt');
-
-Object.keys(values).sort().forEach((key) => {
-    util.log(util.format('QUICK_GALLERY_%s: %s', key, values[key]));
-});
+values.LOG_DIR = path.join(values.CACHE_DIR, 'logs');
+values.LOG_PATH = path.join(values.LOG_DIR, values.LOG_FILENAME);
 
 export default values;

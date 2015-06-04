@@ -1,4 +1,5 @@
 import glob from 'glob';
+import L from './logger';
 
 function listDirectories(cwd) {
     return new Promise((resolve, reject) => {

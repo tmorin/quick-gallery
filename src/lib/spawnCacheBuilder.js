@@ -1,5 +1,5 @@
-import util from 'util';
 import childProcess from 'child_process';
+import L from './logger';
 
 var ref;
 
@@ -8,61 +8,49 @@ export function isBusy() {
 }
 
 export function start(args = []) {
-    if (ref) {
-        throw new Error('a cache builder process is aldready started!');
-    }
-
     var formattedArgs = Object.keys(args).reduce(function (a, b) {
         if (args[b] && args[b] !== 'false') {
             a.push('--' + b);
         }
         return a;
     }, []);
-
-    util.log('start a cache builder process');
-
     return new Promise((resolve, reject) => {
-        ref = childProcess.fork('bin/gqCacheBuilder.js', formattedArgs, {
-            silent: false,
-            stdio: ['pipe', process.out, process.out]
-        });
-        ref.on('close', function (code) {
-            util.log('the cache builder process is finished');
-            try {
-                ref.unref();
+        if (ref) {
+            reject(new Error('a cache builder process is in in progress!'));
+        } else {
+            L.info('start a cache builder process');
+            ref = childProcess.fork('bin/gqCacheBuilder.js', formattedArgs, {
+                silent: true
+            });
+            ref.on('close', function (code) {
+                L.info('the cache builder process is finished');
                 ref = null;
-            } catch (e) {
-                util.error(e);
-            }
-            if (code === 0) {
-                resolve(code);
-            } else {
-                reject(code);
-            }
-        });
+                if (code === 0) {
+                    resolve(code);
+                } else {
+                    reject(new Error('the cache builder process failed: ' + code));
+                }
+            });
+        }
     });
 }
 
 export function stop(args) {
-    if (!ref) {
-        throw new Error('no cache builder process in progress!');
-    }
-    util.log('stop the cache builder process');
-    ref.kill('SIGINT');
     return new Promise((resolve, reject) => {
-        ref.on('close', function (code) {
-            util.log('the cache builder has been interupted');
-            try {
-                ref.unref();
+        if (!ref) {
+            reject(new Error('no cache builder process in progress!'));
+        } else {
+            L.info('stop the cache builder process');
+            ref.kill('SIGINT');
+            ref.on('close', function (code) {
+                L.info('the cache builder has been interupted');
                 ref = null;
-            } catch (e) {
-                util.error(e);
-            }
-            if (code === 0) {
-                resolve();
-            } else {
-                reject(code)
-            }
-        });
+                if (code === 0 || code === null) {
+                    resolve();
+                } else {
+                    reject(new Error('the cache builder process failed: ' + code));
+                }
+            });
+        }
     });
 }
