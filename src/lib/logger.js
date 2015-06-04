@@ -5,16 +5,16 @@ import C from './config';
 
 mkdirp.sync(path.dirname(C.LOG_PATH));
 
-var root = new (winston.Logger)({
+var root = new(winston.Logger)({
     transports: [
-        new (winston.transports.Console)({
+        new(winston.transports.Console)({
             name: 'all-console',
             colorize: true,
             prettyPrint: true,
             timestamp: true,
             humanReadableUnhandledException: true
         }),
-        new (winston.transports.DailyRotateFile)({
+        new(winston.transports.DailyRotateFile)({
             name: 'all-file',
             colorize: false,
             prettyPrint: true,

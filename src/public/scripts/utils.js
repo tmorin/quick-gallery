@@ -60,12 +60,8 @@ export function fixAndGetModalBodyHeight($modal) {
     return $body.height();
 }
 
-
 export function fixAndGetModalBodyWidth($modal) {
     var $dialog = $modal.find('.modal-dialog');
-    var $header = $modal.find('.modal-header');
-    var $body = $modal.find('.modal-body');
-    var $footer = $modal.find('.modal-footer');
 
     var modalWidth = $modal.width();
     $dialog.outerWidth(modalWidth);

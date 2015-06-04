@@ -1,6 +1,9 @@
 import * as $ from 'jQuery';
 import * as Router from 'Router';
-import {fadeIn, fadeOut, findDirectory} from './utils';
+import {
+    fadeIn, fadeOut, findDirectory
+}
+from './utils';
 import * as directoriesView from './directoriesView';
 import * as directoryView from './directoryView';
 import * as pictureView from './pictureView';

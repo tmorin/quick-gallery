@@ -1,7 +1,5 @@
 import 'babel/polyfill';
-import fs from 'fs';
 import parseArgs from 'minimist';
-import C from '../lib/config';
 import L from '../lib/logger';
 
 var args = parseArgs(process.argv.slice(2));

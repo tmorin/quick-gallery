@@ -1,10 +1,13 @@
 import * as $ from 'jQuery';
-import {fixAndGetModalBodyHeight, fixAndGetModalBodyWidth} from './utils';
+import {
+    fixAndGetModalBodyHeight, fixAndGetModalBodyWidth
+}
+from './utils';
 
 export function render($view) {
 
     var $refreshBtn = $view.find('button.refresh');
-    var $pre = $view.find('pre')
+    var $pre = $view.find('pre');
 
     function resize() {
         fixAndGetModalBodyWidth($view);
@@ -14,7 +17,7 @@ export function render($view) {
     function renderLogs(logs) {
         $pre.text(logs);
         resize();
-    };
+    }
 
     $refreshBtn.click((e) => {
         e.preventDefault();
@@ -26,8 +29,7 @@ export function render($view) {
         $refreshBtn.focus();
     });
 
-    $view.on('shown.bs.modal', () => {
-    });
+    $view.on('shown.bs.modal', () => {});
 
     $(window).ready(resize);
     $(window).resize(resize);

@@ -1,5 +1,8 @@
 import * as $ from 'jQuery';
-import {fadeIn, fixAndGetModalBodyHeight, fixAndGetModalBodyWidth} from './utils';
+import {
+    fadeIn, fixAndGetModalBodyHeight, fixAndGetModalBodyWidth
+}
+from './utils';
 
 export function render($view) {
     var $img = $view.find('.modal-body img');
@@ -29,23 +32,24 @@ export function render($view) {
         var gallery = $view.data('gallery');
         var $pics = $('[data-gallery="' + gallery + '"]');
         var currentPicIndex = $view.data('currentPicIndex');
-        switch(event.which) {
-            case 37:
-                event.preventDefault();
-                displayPreviousPicture($view, $pics, currentPicIndex);
+        switch (event.which) {
+        case 37:
+            event.preventDefault();
+            displayPreviousPicture($view, $pics, currentPicIndex);
             break;
 
-            case 39:
-                event.preventDefault();
-                displayNextPicture($view, $pics, currentPicIndex);
+        case 39:
+            event.preventDefault();
+            displayNextPicture($view, $pics, currentPicIndex);
             break;
 
-            case 27:
-                event.preventDefault();
-                $view.modal('hide');
+        case 27:
+            event.preventDefault();
+            $view.modal('hide');
             break;
 
-            default: return;
+        default:
+            return;
         }
     });
 
