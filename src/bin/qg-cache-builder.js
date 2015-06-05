@@ -8,8 +8,6 @@ var clean = args.clean || false;
 var thumbnails = args.thumbnails || false;
 var adapted = args.adapted || false;
 
-L.info('start to build cache with clean:%s, thumbnails:%s, adapted:%s', clean, thumbnails, adapted);
-
 import * as cacheBuilder from '../lib/cacheBuilder';
 
 var p;

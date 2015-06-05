@@ -1,3 +1,4 @@
+import * as $ from 'jQuery';
 var FADE_DURATION = 200;
 
 export function fadeIn($el) {
@@ -39,7 +40,6 @@ function getHeightMargin($el) {
 }
 
 export function fixAndGetModalBodyHeight($modal) {
-    var $content = $modal.find('.modal-content');
     var $dialog = $modal.find('.modal-dialog');
     var $header = $modal.find('.modal-header');
     var $body = $modal.find('.modal-body');

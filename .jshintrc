@@ -14,10 +14,5 @@
     "undef": true,
     "unused": "vars",
     "strict": false,
-    "globals": {
-        "ceb": false,
-        "cebFeatureTemplate": false,
-        "cebFeatureFrp": false,
-        "cebFeatureCqrs": false
-    }
+    "camelcase": false
 }

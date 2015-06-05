@@ -1,7 +1,7 @@
 import 'babel/polyfill';
-import C from '../lib/config';
-import L from '../lib/logger';
-import app from '../lib/app';
+import C from './config';
+import L from './logger';
+import app from './app';
 
 var server = app.listen(C.HTTP_PORT, () => {
     var host = server.address().address;

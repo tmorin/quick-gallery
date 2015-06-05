@@ -1,3 +1,0 @@
-export QUICK_GALLERY_CACHE_DIR=$HOME/tmp/qg_cache
-export QUICK_GALLERY_PICS_DIR=$HOME/Pictures
-export QUICK_GALLERY_IMAGEMAGICK_PATH=/usr/bin/

@@ -3,15 +3,15 @@ import os from 'os';
 import parseArgs from 'minimist';
 
 var CONSTANTS = {
-    PICS_DIR: null,
-    CACHE_DIR: null,
+    PICS_DIR: process.env.npm_package_config_pics_dir,
+    CACHE_DIR: process.env.npm_package_config_cache_dir,
     ADAPTED_MAX_WIDTH: 1000,
     ADAPTED_MAX_HEIGHT: 1000,
     THUMBNAIL_MAX_WIDTH: 120,
     THUMBNAIL_MAX_HEIGHT: 120,
     CACHE_BUILDER_WORKERS: os.cpus().length,
-    IMAGEMAGICK_PATH: null,
-    HTTP_PORT: 4000,
+    IMAGEMAGICK_PATH: process.env.npm_package_config_imagemagick_path,
+    HTTP_PORT: process.env.npm_package_config_port || 4000,
     LOG_FILENAME: 'quick-gallery.log'
 };
 
