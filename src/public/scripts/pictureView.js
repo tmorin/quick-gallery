@@ -1,4 +1,5 @@
 import * as $ from 'jQuery';
+import basket from './basket';
 import {
     fadeIn, fixAndGetModalBodyHeight, fixAndGetModalBodyWidth
 }
@@ -84,6 +85,7 @@ function populate($view, $currentPic) {
     var picTitle = '';
     var picRawPath = '';
     var picPath = '';
+    var picHref = '';
     var $pics = $();
     var picsCounter = 0;
     var currentPicIndex = 0;
@@ -91,8 +93,9 @@ function populate($view, $currentPic) {
     if ($currentPic) {
         gallery = $currentPic.data('gallery');
         picTitle = $currentPic.data('title');
-        picRawPath = $currentPic.data('raw');
-        picPath = $currentPic.attr('href');
+        picPath = $currentPic.data('path');
+        picRawPath = './pictures/' + $currentPic.data('path');
+        picHref = $currentPic.attr('href');
         $pics = $('[data-gallery="' + gallery + '"]');
         picsCounter = $pics.size();
         currentPicIndex = $pics.index($currentPic);
@@ -105,9 +108,9 @@ function populate($view, $currentPic) {
     $view.find('.modal-header h4 .currentPicIndex').text(currentPicIndex + 1);
     $view.find('.modal-header h4 .picsCounter').text(picsCounter);
 
-    if ($view.find('.modal-body img').attr('src') !== picPath) {
+    if ($view.find('.modal-body img').attr('src') !== picHref) {
         $view.find('.modal-body img').hide();
-        $view.find('.modal-body img').attr('src', picPath);
+        $view.find('.modal-body img').attr('src', picHref);
     }
 
     $view.find('.modal-footer .currentPicIndex').text(currentPicIndex + 1);
@@ -124,5 +127,15 @@ function populate($view, $currentPic) {
     $view.find('.modal-footer button.next').click((e) => {
         e.preventDefault();
         displayNextPicture($view, $pics, currentPicIndex);
+    });
+
+    if (basket.isPresent(picPath)) {
+        $view.find('.modal-footer button.basket-toggle').button('reset').addClass('active');
+    } else {
+        $view.find('.modal-footer button.basket-toggle').button('reset').removeClass('active');
+    }
+    $view.find('.modal-footer button.basket-toggle').off();
+    $view.find('.modal-footer button.basket-toggle').click((e) => {
+        basket.toggle(picPath);
     });
 }

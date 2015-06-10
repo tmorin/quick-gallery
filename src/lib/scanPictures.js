@@ -17,7 +17,8 @@ function listDirectories(cwd) {
 function listPictures(cwd) {
     return new Promise((resolve, reject) => {
         glob('*.{jpg,jpeg,png,gif,tif,tiff,bmp,dib,webp}', {
-            cwd: cwd
+            cwd: cwd,
+            nocase: true
         }, function (error, pictures) {
             if (error) {
                 reject(error);

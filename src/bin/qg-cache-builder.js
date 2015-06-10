@@ -31,7 +31,7 @@ if (adapted) {
 p.then(() => {
     L.info('cache successfully built');
     process.exit(0);
-}, (error) => {
+}, error => {
     L.error(error);
     process.exit(1);
 });

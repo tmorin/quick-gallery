@@ -2,7 +2,7 @@ doctype html
 html
   head
     title Quick Gallery
-    link(rel='stylesheet',type='text/css',href='styles/vendors.css')
+    link(rel='stylesheet',type='text/css',href='styles/components.css')
     link(rel='stylesheet',type='text/css',href='styles/app.css')
   body
     .navbar.navbar-default
@@ -21,13 +21,17 @@ html
                             i.fa.fa-fw.fa-sitemap
                             span Directories
                     li
-                        a(type="button",data-toggle="modal",data-target="#adminCacheBuilder",href="")
-                            i.fa.fa-fw.fa-gear
-                            span Cache builder
+                        a(type="button",data-toggle="modal",data-target="#basket",href="")
+                            i.fa.fa-fw.fa-shopping-cart
+                            span Basket
                     li
-                        a(type="button",data-toggle="modal",data-target="#adminServerLogs",href="")
+                        a(type="button",data-toggle="modal",data-target="#adminCache",href="")
+                            i.fa.fa-fw.fa-gear
+                            span Cache
+                    li
+                        a(type="button",data-toggle="modal",data-target="#adminLogs",href="")
                             i.fa.fa-fw.fa-info
-                            span Server logs
+                            span Logs
     #directory.container-fluid
         .row
             .col-sm-12
@@ -39,13 +43,13 @@ html
         .content.row
             .col-sm-12
                 ul.pictures.nav.nav-pills
-    #adminServerLogs.expanded.modal.fade
+    #adminLogs.expanded.modal.fade
       .modal-dialog
         .modal-content
           .modal-header
             h4
               i.text-muted.fa.fa-fw.fa-info
-              span Server logs
+              span Logs
               .pull-right.small.text-muted
                 a.text-muted(href="",data-dismiss="modal")
                   i.fa.fa-fw.fa-close
@@ -56,17 +60,21 @@ html
                 i.fa.fa-fw.fa-external-link
             button.btn.btn-default.refresh(type="button")
               i.fa.fa-fw.fa-refresh
-    #adminCacheBuilder.modal.fade
+    #adminCache.modal.fade
       .modal-dialog
         .modal-content
           .modal-header
             h4
               i.text-muted.fa.fa-fw.fa-gear
-              span Cache builder
+              span Cache
               .pull-right.small.text-muted
                 a.text-muted(href="",data-dismiss="modal")
                   i.fa.fa-fw.fa-close
           .modal-body
+            button.btn.btn-default.btn-block.directories(type="button")
+              i.fa.fa-fw.fa-refresh
+              span Refresh directories
+            hr
             .alert-container
             form(name="adminForm")
               .row
@@ -122,11 +130,36 @@ html
                 .modal-body
                     img.img-responsive.img-rounded
                 .modal-footer
+                    button.basket-toggle.btn.btn-default(type="button",data-toggle="button",aria-pressed="false",autocomplete="off")
+                      i.fa.fa-fw.fa-cart-plus
                     a.download.btn.btn-default(target="_blank")
                         i.fa.fa-fw.fa-download
                     button.previous.btn.btn-default(type="button")
                         i.fa.fa-fw.fa-chevron-left
                     button.next.btn.btn-default(type="button")
                         i.fa.fa-fw.fa-chevron-right
-    script(src="scripts/vendors.js")
+    #basket.modal.fade
+      .modal-dialog
+        .modal-content
+          .modal-header
+            h4
+              i.text-muted.fa.fa-fw.fa-shopping-cart
+              span Basket
+              .pull-right.small.text-muted
+                a.text-muted(href="",data-dismiss="modal")
+                  i.fa.fa-fw.fa-close
+          .modal-body
+            .form
+              .form-group
+                label(for="basketName") Name
+                input.form-control(id="basketName",name="name",placeholder="the basket's name")
+              .checkbox
+                label
+                  input(name="flatten",type="checkbox",value="true")
+                  span if checked, directories are flatten
+            .media-container
+          .modal-footer
+            button.download.btn.btn-primary(type="button")
+              i.fa.fa-fw.fa-cart-arrow-down
+    script(src="scripts/components.js")
     script(src="scripts/app.js")

@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import express from 'express';
 import bodyParser from 'body-parser';
+import JSZip from 'jszip';
 
 import L from './logger';
 import C from './config';
@@ -26,10 +27,38 @@ app.use('/pictures', express.static(C.PICS_DIR));
 
 app.get('/', (req, res) => res.render('index'));
 
+app.get('/basket', (req, res) => {
+    var flatten = req.query.flatten === 'true';
+    var name = req.query.name || Date.now();
+    var pictures = req.query.pictures || [];
+    var zip = new JSZip();
+    pictures.forEach((picPath) => {
+        var filename = picPath.replace('./', '');
+        if (flatten) {
+            filename = picPath.replace(/\//g, '_');
+        }
+        zip.file(filename, fs.readFileSync(C.PICS_DIR + picPath));
+    });
+    var buffer = zip.generate({
+        type: 'nodebuffer'
+    });
+    res.set('Content-Type', 'application/zip');
+    res.set('Content-Disposition', 'attachment; filename=' + name + '.zip');
+    res.send(buffer);
+});
+
+var pictures;
 app.get('/api/pictures', (req, res) => {
-    scanPictures(C.PICS_DIR).then(
-        (pictures) => res.json(pictures), (error) => res.status(500).send(error)
-    );
+    if (pictures && req.query.refresh !== 'true') {
+        res.json(pictures);
+    } else {
+        scanPictures(C.PICS_DIR).then(
+            scannedPictures => {
+                pictures = scannedPictures;
+                res.json(pictures);
+            }, error => res.status(500).send(error)
+        );
+    }
 });
 
 app.get('/api/cache', (req, res) => {
@@ -39,11 +68,7 @@ app.get('/api/cache', (req, res) => {
 });
 
 app.post('/api/cache', (req, res) => {
-    spawnCacheBuilder.start(req.body).then(() => {
-        res.sendStatus(202);
-    }, (error) => {
-        res.sendStatus(202);
-    });
+    spawnCacheBuilder.start(req.body).then(() => res.sendStatus(202), error => res.sendStatus(202));
 });
 
 app.delete('/api/cache', (req, res) => {
@@ -61,7 +86,7 @@ app.get('/api/logs', (req, res) => {
     });
 });
 
-app.get('/thumbnail/(*)', (req, res) => {
+app.get('/thumbnails/(*)', (req, res) => {
     var thumbnailPath = path.join(C.THUMBNAIL_DIR, req.params[0]);
     fs.lstat(thumbnailPath, function (error, stat) {
         if (error) {
@@ -89,8 +114,8 @@ app.get('/adapted/(*)', (req, res) => {
                 res.sendFile(req.params[0], {
                     root: C.ADAPTED_DIR
                 });
-            }, () => {
-                L.error(error);
+            }, (e) => {
+                L.error(e);
                 res.sendStatus(500);
             });
         } else {

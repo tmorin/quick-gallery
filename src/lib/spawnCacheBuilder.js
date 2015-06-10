@@ -19,7 +19,7 @@ export function start(args = []) {
             reject(new Error('a cache builder process is in in progress!'));
         } else {
             L.info('start a cache builder process');
-            ref = childProcess.fork('bin/gqCacheBuilder.js', formattedArgs, {
+            ref = childProcess.fork('bin/qg-cache-builder.js', formattedArgs, {
                 silent: true
             });
             ref.on('close', function (code) {

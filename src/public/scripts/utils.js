@@ -17,24 +17,6 @@ export function fadeOut($el) {
     });
 }
 
-export function findDirectory(path, directories) {
-    var parts = path.split('/');
-    parts.shift();
-    parts.pop();
-    parts.unshift('root');
-
-    var directory;
-
-    parts.forEach((name) => {
-        directory = directories.filter((directory) => directory.name === name)[0];
-        if (directory) {
-            directories = directory.directories;
-        }
-    });
-
-    return directory;
-}
-
 function getHeightMargin($el) {
     return parseInt($el.css('margin-top').replace('px', '')) + parseInt($el.css('margin-bottom').replace('px', ''));
 }

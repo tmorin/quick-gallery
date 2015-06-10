@@ -1,4 +1,8 @@
 import * as $ from 'jQuery';
+import {
+    loadDirectories
+}
+from './directories';
 
 export function render($view) {
 
@@ -17,9 +21,18 @@ export function render($view) {
         $view.find('.alert-container').empty().append($('<div>').addClass('alert ' + cssClass).text(message));
     }
 
+    var $directoriesBtn = $view.find('button.directories');
     var $startBtn = $view.find('button.start');
     var $stopBtn = $view.find('button.stop');
     var $statusBtn = $view.find('button.status');
+
+    $directoriesBtn.click(() => {
+        $directoriesBtn.attr('disabled', true).find('i').addClass('fa-spin');
+        loadDirectories().then(() => {
+            $directoriesBtn.attr('disabled', false).find('i').removeClass('fa-spin');
+            window.location.reload();
+        });
+    });
 
     $startBtn.click(() => {
         startCacheBuilder().then(() => {

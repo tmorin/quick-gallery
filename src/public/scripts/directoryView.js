@@ -47,11 +47,11 @@ function renderPictures($el, directory, pictures) {
             .attr('data-toggle', 'gallery')
             .attr('data-gallery', directory.name)
             .attr('data-title', picture.name)
-            .attr('data-raw', './pictures/' + picture.path)
+            .attr('data-path', picture.path)
             .append(
                 $('<div>').addClass('picture').append(
                     $('<img>')
-                    .attr('src', './thumbnail/' + picture.path)
+                    .attr('data-original', './thumbnails/' + picture.path)
                     .attr('alt', picture.name)
                     .addClass('img-thumbnail')
                 )

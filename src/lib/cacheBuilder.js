@@ -51,7 +51,8 @@ export function listAllPictures() {
         L.info('list pictures from %s', C.PICS_DIR);
         glob('**/*.{jpg,jpeg,png,gif,tif,tiff,bmp,dib,webp}', {
             cwd: C.PICS_DIR,
-            nodir: true
+            nodir: true,
+            nocase: true
         }, function (e, pictures) {
             L.profile('cache builder -> list all pictures');
             if (e) {
