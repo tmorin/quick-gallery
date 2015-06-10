@@ -6,27 +6,19 @@ import {
 from './utils';
 
 export function render($view) {
-    var $img = $view.find('.modal-body img');
-
-    function resize() {
-        fixAndGetModalBodyWidth($view);
-        $img.css('max-height', fixAndGetModalBodyHeight($view));
-    }
 
     $(document).delegate('[data-toggle=gallery]', 'click', function (event) {
         event.preventDefault();
-
         var $currentPic = $(this);
 
-        $view.modal('show');
+        populate($view);
 
         $view.on('shown.bs.modal', () => {
             populate($view, $currentPic);
-            resize();
             $view.find('.modal-footer button.next').focus();
         });
 
-        $view.on('hidden.bs.modal', () => populate($view));
+        $view.modal('show');
     });
 
     $(document).delegate('.modal-open', 'keydown', (event) => {
@@ -54,12 +46,13 @@ export function render($view) {
         }
     });
 
-    $view.find('.modal-body img').load(function () {
-        fadeIn($(this));
-    });
+    $(window).ready(() => resize($view));
+    $(window).resize(() => resize($view));
+}
 
-    $(window).ready(resize);
-    $(window).resize(resize);
+function resize($view) {
+    fixAndGetModalBodyWidth($view);
+    $view.find('.modal-body img').css('max-height', fixAndGetModalBodyHeight($view));
 }
 
 function displayPreviousPicture($view, $pics, currentPicIndex) {
@@ -108,10 +101,12 @@ function populate($view, $currentPic) {
     $view.find('.modal-header h4 .currentPicIndex').text(currentPicIndex + 1);
     $view.find('.modal-header h4 .picsCounter').text(picsCounter);
 
-    if ($view.find('.modal-body img').attr('src') !== picHref) {
-        $view.find('.modal-body img').hide();
-        $view.find('.modal-body img').attr('src', picHref);
-    }
+    $view.find('.modal-body')
+      .html('<img class="img-responsive img-rounded">')
+      .find('img').hide().attr('src', picHref).load(function () {
+          fadeIn($(this));
+          resize($view);
+      });
 
     $view.find('.modal-footer .currentPicIndex').text(currentPicIndex + 1);
     $view.find('.modal-footer .picsCounter').text(picsCounter);

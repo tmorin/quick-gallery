@@ -6,43 +6,39 @@ html
     link(rel='stylesheet',type='text/css',href='styles/app.css')
   body
     .navbar.navbar-default
-        .container-fluid
-            .navbar-header
-                button.navbar-toggle.collapsed(data-toggle="collapse",data-target="#navbar-collapse")
-                    span.sr-only Toggle navigation
-                    span.icon-bar
-                    span.icon-bar
-                    span.icon-bar
-                .navbar-brand QuickGallery
-            #navbar-collapse.collapse.navbar-collapse
-                ul.nav.navbar-nav
-                    li
-                        a(type="button",data-toggle="modal",data-target="#directories",href="")
-                            i.fa.fa-fw.fa-sitemap
-                            span Directories
-                    li
-                        a(type="button",data-toggle="modal",data-target="#basket",href="")
-                            i.fa.fa-fw.fa-shopping-cart
-                            span Basket
-                    li
-                        a(type="button",data-toggle="modal",data-target="#adminCache",href="")
-                            i.fa.fa-fw.fa-gear
-                            span Cache
-                    li
-                        a(type="button",data-toggle="modal",data-target="#adminLogs",href="")
-                            i.fa.fa-fw.fa-info
-                            span Logs
+      .container-fluid
+        .navbar-header
+          button.navbar-toggle.collapsed(data-toggle="collapse",data-target="#navbar-collapse")
+            span.sr-only Toggle navigation
+            span.icon-bar
+            span.icon-bar
+            span.icon-bar
+          .navbar-brand QuickGallery
+        #navbar-collapse.collapse.navbar-collapse
+          ul.nav.navbar-nav
+            li
+              a(type="button",data-toggle="modal",data-target="#directories",href="")
+                i.fa.fa-fw.fa-sitemap
+                span Directories
+            li
+              a(type="button",data-toggle="modal",data-target="#basket",href="")
+                i.fa.fa-fw.fa-shopping-cart
+                span Basket
+            li
+              a(type="button",data-toggle="modal",data-target="#adminCache",href="")
+                i.fa.fa-fw.fa-gear
+                span Cache
+            li
+              a(type="button",data-toggle="modal",data-target="#adminLogs",href="")
+                i.fa.fa-fw.fa-info
+                span Logs
     #directory.container-fluid
-        .row
-            .col-sm-12
-            form.navbar-form
-                ol.title.breadcrumb
-        .content.row
-            .col-sm-12
-                ul.directories.nav.nav-pills
-        .content.row
-            .col-sm-12
-                ul.pictures.nav.nav-pills
+      form.navbar-form
+        ol.title.breadcrumb
+      .content
+        ul.directories.nav.nav-pills
+      .content
+        ul.pictures.nav.nav-pills
     #adminLogs.expanded.modal.fade
       .modal-dialog
         .modal-content
@@ -114,30 +110,29 @@ html
           .modal-body
             ul.tree
     #picture.expanded.modal.fade
-        .modal-dialog
-            .modal-content
-                .modal-header
-                    h4
-                        i.text-muted.fa.fa-fw.fa-file-picture-o
-                        span.title
-                        .pull-right.small.text-muted
-                            span.currentPicIndex
-                            span /
-                            span.picsCounter
-                            span= " "
-                            a.text-muted(href="",data-dismiss="modal")
-                                i.fa.fa-fw.fa-close
-                .modal-body
-                    img.img-responsive.img-rounded
-                .modal-footer
-                    button.basket-toggle.btn.btn-default(type="button",data-toggle="button",aria-pressed="false",autocomplete="off")
-                      i.fa.fa-fw.fa-cart-plus
-                    a.download.btn.btn-default(target="_blank")
-                        i.fa.fa-fw.fa-download
-                    button.previous.btn.btn-default(type="button")
-                        i.fa.fa-fw.fa-chevron-left
-                    button.next.btn.btn-default(type="button")
-                        i.fa.fa-fw.fa-chevron-right
+      .modal-dialog
+        .modal-content
+          .modal-header
+              h4
+                i.text-muted.fa.fa-fw.fa-file-picture-o
+                span.title
+                .pull-right.small.text-muted
+                  span.currentPicIndex
+                  span /
+                  span.picsCounter
+                  span= " "
+                  a.text-muted(href="",data-dismiss="modal")
+                    i.fa.fa-fw.fa-close
+          .modal-body
+          .modal-footer
+            button.basket-toggle.btn.btn-default(type="button",data-toggle="button",aria-pressed="false",autocomplete="off")
+            i.fa.fa-fw.fa-cart-plus
+            a.download.btn.btn-default(target="_blank")
+              i.fa.fa-fw.fa-download
+            button.previous.btn.btn-default(type="button")
+              i.fa.fa-fw.fa-chevron-left
+            button.next.btn.btn-default(type="button")
+              i.fa.fa-fw.fa-chevron-right
     #basket.modal.fade
       .modal-dialog
         .modal-content
