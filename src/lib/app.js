@@ -6,7 +6,7 @@ import JSZip from 'jszip';
 
 import L from './logger';
 import C from './config';
-import scanPictures from './scanPictures';
+import {scanPictures, scanDirectory} from './scanner';
 import * as spawnCacheBuilder from './spawnCacheBuilder';
 import * as cacheBuilder from './cacheBuilder';
 
@@ -59,6 +59,14 @@ app.get('/api/pictures', (req, res) => {
             }, error => res.status(500).send(error)
         );
     }
+});
+
+app.get('/api/directory/(*)', (req, res) => {
+    var directoryPath = (req.params[0] || '.') + '/';
+    scanDirectory(C.PICS_DIR, directoryPath).then(
+        scannedDirectory => res.json(scannedDirectory),
+        error => res.status(500).send(error)
+    );
 });
 
 app.get('/api/cache', (req, res) => {

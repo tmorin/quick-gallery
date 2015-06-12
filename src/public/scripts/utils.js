@@ -1,21 +1,4 @@
 import * as $ from 'jQuery';
-var FADE_DURATION = 200;
-
-export function fadeIn($el) {
-    return new Promise((resolve) => {
-        $el.fadeIn(FADE_DURATION, () => {
-            resolve($el);
-        });
-    });
-}
-
-export function fadeOut($el) {
-    return new Promise((resolve) => {
-        $el.fadeOut(FADE_DURATION, () => {
-            resolve($el);
-        });
-    });
-}
 
 function getHeightMargin($el) {
     return parseInt($el.css('margin-top').replace('px', '')) + parseInt($el.css('margin-bottom').replace('px', ''));
@@ -40,13 +23,4 @@ export function fixAndGetModalBodyHeight($modal) {
 
     $body.outerHeight(bodyHeight - getHeightMargin($body));
     return $body.height();
-}
-
-export function fixAndGetModalBodyWidth($modal) {
-    var $dialog = $modal.find('.modal-dialog');
-
-    var modalWidth = $modal.width();
-    $dialog.outerWidth(modalWidth);
-
-    return modalWidth;
 }

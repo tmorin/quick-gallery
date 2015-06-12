@@ -1,4 +1,5 @@
 import glob from 'glob';
+import path from 'path';
 
 function listDirectories(cwd) {
     return new Promise((resolve, reject) => {
@@ -62,6 +63,31 @@ function list(cwd, path, name, entries) {
 
 }
 
-export default function (rootDir) {
+export function scanPictures(rootDir) {
     return list(rootDir, './', 'root', []);
 }
+export function scanDirectory(rootDir, cwd) {
+    var name = path.basename(cwd);
+    var entry = {
+       path: cwd,
+       name: name === '.' ? 'root' : name
+    };
+    var dirPromise = listDirectories(path.join(rootDir, cwd)).then(subDirNames => {
+        entry.directories = subDirNames.map(function (subDirName) {
+            return {
+                path: cwd + subDirName,
+                name: path.basename(subDirName)
+            };
+        });
+    });
+    var picPromise = listPictures(path.join(rootDir, cwd)).then(subPicNames => {
+        entry.pictures = subPicNames.map(function (subPicName) {
+            return {
+                path: cwd + subPicName,
+                name: subPicName
+            };
+        });
+    });
+    return Promise.all([dirPromise, picPromise]).then(() => entry);
+}
+

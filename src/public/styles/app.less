@@ -50,15 +50,14 @@ body {
     overflow-x: hidden ! important;
     overflow-y: hidden ! important;
     .modal-dialog {
+        width: 100%;
         margin: 0;
         padding: 0;
-        .modal-content {
-
-        }
     }
 }
-#picture {
+.media-view {
     .modal-body {
+        min-height: 10em;
         text-align: center;
         vertical-align: middle;
         img {
@@ -66,13 +65,16 @@ body {
         }
     }
 }
-#adminLogs {
-    pre {
-        overflow: auto;
-        word-wrap: normal;
+.admin-view {
+    .admin-logs {
+        pre {
+            overflow: auto;
+            word-wrap: normal;
+            height: 20em;
+        }
     }
 }
-#basket {
+.basket-view {
     .media-right {
         .media-object {
             max-height: 50px;

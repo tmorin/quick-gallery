@@ -1,42 +1,33 @@
-import * as $ from 'jQuery';
-import * as Router from 'Router';
-import {
-    fadeIn, fadeOut
-}
-from './utils';
-import {
-    loadDirectories, findDirectory
-}
-from './directories';
-import * as directoriesView from './directoriesView';
-import * as directoryView from './directoryView';
-import * as pictureView from './pictureView';
-import * as basketView from './basketView';
-import * as adminCacheView from './adminCacheView';
-import * as adminLogsView from './adminLogsView';
+import {history} from 'Backbone';
+import {Application, LayoutView, Region} from 'Marionette';
 
-var router = new Router();
-router.on('/directory/(.*)', function (path) {
-    findDirectory(path).then(directory => {
-        fadeOut($('.content')).then($el => {
-            directoryView.render(
-                $('#directory'),
-                directory || {},
-                directory ? directory.directories : [],
-                directory ? directory.pictures : []
-            );
-            return $el;
-        }).then(fadeIn).then(() => $('img.img-thumbnail', $('#directory')).show().lazyload(), err => console.error(err));
-    });
-});
-
-loadDirectories().then(directories => {
-    directoriesView.render($('#directories'), directories);
-    pictureView.render($('#picture'));
-    basketView.render($('#basket'));
-    adminCacheView.render($('#adminCache'));
-    adminLogsView.render($('#adminLogs'));
-    if (directories.length > 0) {
-        router.init('/directory/' + directories[0].path);
+var ModalRegion = Region.extend({
+    el: '#modal',
+    onShow(view) {
+        var self = this;
+        view.$el.modal('show').on('hidden.bs.modal', function () {
+            self.empty();
+        });
+    },
+    onBeforeEmpty(view) {
+        view.$el.data('bs.modal', null);
     }
 });
+
+var RootView = LayoutView.extend({
+    el: 'body',
+    regions: {
+        root: '#root',
+        modal: ModalRegion
+    }
+});
+
+var app = new Application();
+
+app.rootView = new RootView();
+
+app.on('start', function(options){
+    history.start();
+});
+
+export default app;

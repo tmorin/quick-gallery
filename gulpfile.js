@@ -58,15 +58,17 @@ gulp.task('babel-bin', function () {
 gulp.task('babel-public', function () {
     return gulp.src([
             'src/public/scripts/utils.js',
-            'src/public/scripts/basket.js',
-            'src/public/scripts/directories.js',
-            'src/public/scripts/directoriesView.js',
-            'src/public/scripts/directoryView.js',
-            'src/public/scripts/basketView.js',
-            'src/public/scripts/pictureView.js',
-            'src/public/scripts/adminCacheView.js',
-            'src/public/scripts/adminLogsView.js',
-            'src/public/scripts/app.js'
+            'src/public/scripts/models.js',
+            'src/public/scripts/app.js',
+            'src/public/scripts/views/AdminView.js',
+            'src/public/scripts/views/MediaView.js',
+            'src/public/scripts/views/BasketView.js',
+            'src/public/scripts/views/GalleryView.js',
+            'src/public/scripts/views/GalleriesTreeView.js',
+            'src/public/scripts/views/GalleriesView.js',
+            'src/public/scripts/views/AppView.js',
+            'src/public/scripts/AppRouter.js',
+            'src/public/scripts/bootstrap.js'
         ])
         .pipe(plumber())
         .pipe(babel({
@@ -78,7 +80,7 @@ gulp.task('babel-public', function () {
         .pipe(gulp.dest('public/scripts'));
 });
 
-gulp.task('less', function () {
+gulp.task('styles', function () {
     return gulp.src('src/public/**/*.less')
         .pipe(plumber())
         .pipe(less({
@@ -95,8 +97,13 @@ gulp.task('components', function () {
             'node_modules/jquery/dist/jquery.js',
             'node_modules/jquery-lazyload/jquery.lazyload.js',
             'node_modules/jquery-lazyload/jquery.scrollstop.js',
+            'node_modules/form-serializer/jquery.serialize-object.js',
             'node_modules/bootstrap/dist/js/bootstrap.js',
-            'node_modules/director/build/director.js'
+            'node_modules/lodash/index.js',
+            'node_modules/backbone/backbone.js',
+            'node_modules/backbone.localstorage/backbone.localStorage.js',
+            'node_modules/backbone.stickit/backbone.stickit.js',
+            'node_modules/backbone.marionette/lib/backbone.marionette.js'
         ])
         .pipe(concat('components.js'))
         .pipe(gulpif(process.env.NODE_ENV === 'production', uglify()))
@@ -129,14 +136,14 @@ gulp.task('watch', ['build'], function () {
     gulp.watch('src/lib/**/*.js', ['jshint-unblocked', 'babel-lib']);
     gulp.watch('src/bin/**/*.js', ['jshint-unblocked', 'babel-bin']);
     gulp.watch('src/public/**/*.js', ['jshint-unblocked', 'babel-public']);
-    gulp.watch('src/public/**/*.less', ['less']);
-    gulp.watch('gulpfile.js', ['build']);
+    gulp.watch('src/public/**/*.less', ['styles']);
+    gulp.watch('gulpfile.js', ['components', 'babel-lib', 'babel-bin', 'babel-public', 'styles']);
 });
 
 gulp.task('serve', ['watch'], function () {
     require('./lib/server');
 });
 
-gulp.task('build', ['jshint', 'components', 'babel-lib', 'babel-bin', 'babel-public', 'less']);
+gulp.task('build', ['jshint', 'components', 'babel-lib', 'babel-bin', 'babel-public', 'styles']);
 
 gulp.task('default', ['build']);
