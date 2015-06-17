@@ -10,11 +10,11 @@ from 'Marionette';
 var GalleriesTreeItemView = CompositeView.extend({
     template: template(`
         <% if (directories.length) { %>
-        <a class="icon" href=""><i class="fa-li fa fa-folder-o"></i></a>
+        <a class="icon" href=""><i class="fa-li fa fa-folder-open-o"></i></a>
         <% } %>
         <a href="#/galleries/<%= path %>"><%= name %></a>
         <small class="text-muted">(<%= pictures.length %>)</small>
-        <ul class="fa-ul hide"></ul>
+        <ul class="fa-ul"></ul>
     `),
     tagName: 'li',
     childViewContainer: 'ul',
@@ -40,13 +40,13 @@ var GalleriesTreeItemView = CompositeView.extend({
             e.preventDefault();
         }
         this.ui.directories.toggleClass('hide');
-        this.ui.icon.find('.fa').toggleClass('hidefa-folder-o fa-folder-open-o');
+        this.ui.icon.find('.fa').toggleClass('fa-folder-o fa-folder-open-o');
     }
 });
 
 export default CollectionView.extend({
     childView: GalleriesTreeItemView,
-    className: 'fa-ul',
+    className: 'galleries-tree-view fa-ul',
     tagName: 'ul',
     collectionEvents: {
         'reset': 'render'

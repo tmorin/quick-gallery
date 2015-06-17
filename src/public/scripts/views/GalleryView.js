@@ -1,12 +1,13 @@
 import app from 'app';
 import {template} from '_';
 import {ItemView, CollectionView, LayoutView} from 'Marionette';
-import MediaView from './MediaView';
+import MediaModalView from './MediaModalView';
+import SitemapModalView from './SitemapModalView';
 
 var BreadcrumbView = ItemView.extend({
     template: template(`
         <li>
-            <a href="#/galleries">
+            <a href="" class="sitemap">
                 <i class="fa fa-fw fa-sitemap"></i>
             </a>
         </li>
@@ -41,7 +42,19 @@ var BreadcrumbView = ItemView.extend({
         };
     },
     tagName: 'ol',
-    className: 'breadcrumb'
+    className: 'gallery-breadcrumb-view breadcrumb',
+    ui: {
+        sitemap: 'a.sitemap'
+    },
+    events: {
+        'click @ui.sitemap': 'openSitemap'
+    },
+    openSitemap(e) {
+        e.preventDefault();
+        app.rootView.getRegion('modal').show(new SitemapModalView({
+            collection: this.collection
+        }));
+    }
 });
 
 var DirectoryView = ItemView.extend({
@@ -56,7 +69,7 @@ var DirectoryView = ItemView.extend({
 
 var DirectoriesView = CollectionView.extend({
     tagName: 'ul',
-    className: 'nav nav-pills',
+    className: 'gallery-directories-view nav nav-pills',
     childView: DirectoryView
 });
 
@@ -70,7 +83,6 @@ var PictureView = ItemView.extend({
         </a>
     `),
     tagName: 'li',
-    className: 'picture',
     ui: {
         a: 'a'
     },
@@ -79,7 +91,7 @@ var PictureView = ItemView.extend({
     },
     openMedia(e) {
         e.preventDefault();
-        app.rootView.getRegion('modal').show(new MediaView({
+        app.rootView.getRegion('modal').show(new MediaModalView({
             model: this.model,
             collection: this.collection
         }));
@@ -88,7 +100,7 @@ var PictureView = ItemView.extend({
 
 var PicturesView = CollectionView.extend({
     tagName: 'ul',
-    className: 'nav nav-pills',
+    className: 'gallery-pictures-view nav nav-pills',
     childView: PictureView,
     childViewOptions(model) {
         return {
@@ -104,6 +116,7 @@ export default LayoutView.extend({
         <div id="gallery-directories"></div>
         <div id="gallery-pictures"></div>
     `),
+    className: 'gallery-view',
     regions: {
         breadcrumb: '#gallery-breadcrumb',
         directories: '#gallery-directories',
@@ -111,7 +124,8 @@ export default LayoutView.extend({
     },
     onBeforeShow() {
         this.showChildView('breadcrumb', new BreadcrumbView({
-            model: this.model
+            model: this.model,
+            collection: this.collection
         }));
         this.showChildView('directories', new DirectoriesView({
             collection: this.model.get('directories')

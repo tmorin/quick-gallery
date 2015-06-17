@@ -3,7 +3,7 @@ import {
 }
 from 'Backbone';
 import AdminView from './AdminView';
-import GalleriesView from './GalleriesView';
+import GalleryView from './GalleryView';
 
 export default Router.extend({
     initialize(options) {
@@ -22,7 +22,7 @@ export default Router.extend({
             });
         },
         galleries(path) {
-            this.appView.showChildView('content', new GalleriesView({
+            this.appView.showChildView('content', new GalleryView({
                 collection: this.appCtx.get('directories'),
                 model: this.appCtx.get('directories').getDirectory(path)
             }));

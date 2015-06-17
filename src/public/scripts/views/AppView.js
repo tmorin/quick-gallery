@@ -1,7 +1,7 @@
 import {template} from '_';
 import app from 'app';
 import {LayoutView} from 'Marionette';
-import BasketView from './BasketView';
+import BasketModalView from './BasketModalView';
 
 var NavigationView = LayoutView.extend({
     template: template(`
@@ -46,7 +46,7 @@ var NavigationView = LayoutView.extend({
     },
     openBasket(e) {
         e.preventDefault();
-        app.rootView.getRegion('modal').show(new BasketView({
+        app.rootView.getRegion('modal').show(new BasketModalView({
             model: this.model.get('basket')
         }));
     }
@@ -57,7 +57,7 @@ export default LayoutView.extend({
         <div id="navigation"></div>
         <div id="content" class="container-fluid"></div>
     `),
-    className: 'app',
+    className: 'app-view',
     regions: {
         navigation: '#navigation',
         content: '#content'

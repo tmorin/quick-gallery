@@ -1,6 +1,6 @@
 {
   "name": "quick-gallery",
-  "version": "0.0.0",
+  "version": "0.0.0-beta1",
   "description": "Quick gallery",
   "main": "lib/server",
   "keywords": [

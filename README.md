@@ -1,5 +1,8 @@
 # quick-gallery
 
+[![Dependency Status](https://david-dm.org/tmorin/quick-gallery.png)](https://david-dm.org/tmorin/quick-gallery)
+[![devDependency Status](https://david-dm.org/tmorin/quick-gallery/dev-status.png)](https://david-dm.org/tmorin/quick-gallery#info=devDependencies)
+
 quick-gallery is an easy way to browse galleries of pictures organized from the file system.
 
 It aggressively uses a cache based on the file system. The cache will store thumbnails and resized pictures.

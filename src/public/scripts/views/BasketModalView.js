@@ -9,7 +9,7 @@ var PictureView = ItemView.extend({
             </button>
         </div>
         <div class="media-body media-middle">
-            <h4 class="media-heading"><%= path %></h4>
+            <div class="media-heading"><%= path %></div>
         </div>
         <div class="media-right media-middle">
             <img class="media-object" src="./thumbnails/<%= path %>">
@@ -66,7 +66,7 @@ export default CompositeView.extend({
             </div>
         </div>
     `),
-    className: 'basket-view modal fade',
+    className: 'basket-modal-view modal fade',
     childView: PictureView,
     childViewContainer: '#basket-pictures',
     ui: {
