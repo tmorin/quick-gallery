@@ -23,5 +23,5 @@ trim_trailing_whitespace = false
 [*.json]
 indent_size = 2
 
-[*.jade]
+[*.pug]
 indent_size = 2

@@ -5,7 +5,9 @@ const pkg = require('./package.json');
 
 module.exports = {
     entry: {
-        'app': './src/public/scripts/bootstrap.js'
+        'gallery': './src/public/gallery/index.js',
+        'admin': './src/public/admin/index.js',
+        'basket': './src/public/basket/index.js'
     },
     output: {
         path: path.join(__dirname, 'public'),
@@ -13,15 +15,37 @@ module.exports = {
     },
     plugins: [
         new webpack.optimize.OccurenceOrderPlugin(),
-        /*new webpack.optimize.CommonsChunkPlugin({
-         name: 'commons',
-         filename: 'commons.[hash].js'
-         }),*/
+        new webpack.optimize.CommonsChunkPlugin({
+            name: 'commons',
+            filename: 'commons.[hash].js'
+        }),
         new HtmlWebpackPlugin({
-            template: './src/public/index.ejs',
+            template: './src/public/tpl.pug',
             inject: 'head',
-            chunks: [/*'commons', */'app'],
+            chunks: ['commons', 'gallery'],
             filename: 'index.html',
+            minify: {
+                collapseInlineTagWhitespace: true,
+                collapseWhitespace: true
+            },
+            pkg: pkg
+        }),
+        new HtmlWebpackPlugin({
+            template: './src/public/tpl.pug',
+            inject: 'head',
+            chunks: ['commons', 'admin'],
+            filename: 'admin.html',
+            minify: {
+                collapseInlineTagWhitespace: true,
+                collapseWhitespace: true
+            },
+            pkg: pkg
+        }),
+        new HtmlWebpackPlugin({
+            template: './src/public/tpl.pug',
+            inject: 'head',
+            chunks: ['commons', 'basket'],
+            filename: 'basket.html',
             minify: {
                 collapseInlineTagWhitespace: true,
                 collapseWhitespace: true
@@ -31,9 +55,8 @@ module.exports = {
     ],
     module: {
         loaders: [
+            {test: /\.pug?$/, loader: 'pug'},
             {test: /\.js?$/, exclude: /node_modules/, loader: 'babel'},
-            {test: /bootstrap\.js$/, loader: 'imports?jQuery=jquery'},
-            {test: /jquery\.js$/, loader: 'expose?jQuery'},
             {test: /\.woff(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=10000&mimetype=application/font-woff'},
             {test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=10000&mimetype=application/font-woff'},
             {test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=10000&mimetype=application/octet-stream'},
@@ -46,11 +69,7 @@ module.exports = {
         ]
     },
     resolve: {
-        alias: {
-            'jquery': path.join(__dirname, 'node_modules/jquery/dist/jquery'),
-            'Backbone': path.join(__dirname, 'node_modules/backbone/backbone'),
-            'Marionette': path.join(__dirname, 'node_modules/backbone.marionette/lib/backbone.marionette')
-        }
+        alias: {}
     },
     devServer: {
         contentBase: 'public',
