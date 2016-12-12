@@ -1,16 +1,15 @@
-import 'babel/polyfill';
-import parseArgs from 'minimist';
-import L from '../lib/logger';
+import "babel/polyfill";
+import parseArgs from "minimist";
+import L from "../lib/logger";
+import * as cacheBuilder from "../lib/cacheBuilder";
 
-var args = parseArgs(process.argv.slice(2));
+const args = parseArgs(process.argv.slice(2));
 
-var clean = args.clean || false;
-var thumbnails = args.thumbnails || false;
-var adapted = args.adapted || false;
+const clean = args.clean || false;
+const thumbnails = args.thumbnails || false;
+const adapted = args.adapted || false;
 
-import * as cacheBuilder from '../lib/cacheBuilder';
-
-var p;
+let p;
 
 if (clean) {
     p = cacheBuilder.clean(thumbnails, adapted).then(cacheBuilder.prepare);

@@ -1,13 +1,7 @@
-import {
-    template
-}
-from '_';
-import {
-    CollectionView, CompositeView
-}
-from 'Marionette';
+import {template} from 'lodash';
+import {CollectionView, CompositeView} from 'Marionette';
 
-var GalleriesTreeItemView = CompositeView.extend({
+const GalleriesTreeItemView = CompositeView.extend({
     template: template(`
         <% if (directories.length) { %>
         <a class="icon" href=""><i class="fa-li fa fa-folder-open-o"></i></a>
@@ -58,8 +52,8 @@ export default CollectionView.extend({
     },
     onRender() {
         if (this.model) {
-            var id = this.model.id;
-            var current = this;
+            const id = this.model.id;
+            let current = this;
             while (current) {
                 current = current.children.filter((view) => {
                     return view.model.get('directories').some((dir) => id.indexOf(dir.id) === 0);

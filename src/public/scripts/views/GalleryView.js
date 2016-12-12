@@ -1,10 +1,10 @@
-import app from 'app';
-import {template} from '_';
-import {ItemView, CollectionView, LayoutView} from 'Marionette';
-import MediaModalView from './MediaModalView';
-import SitemapModalView from './SitemapModalView';
+import app from "../app";
+import {template} from "lodash";
+import {View, CollectionView} from "Marionette";
+import MediaModalView from "./MediaModalView";
+import SitemapModalView from "./SitemapModalView";
 
-var BreadcrumbView = ItemView.extend({
+const BreadcrumbView = View.extend({
     template: template(`
         <li>
             <a href="" class="sitemap">
@@ -24,13 +24,13 @@ var BreadcrumbView = ItemView.extend({
                 }
         }); %>
     `),
-    templateHelpers() {
-        var parts = this.model.get('path').split('/');
+    templateContext() {
+        const parts = this.model.get('path').split('/');
         parts.shift();
         parts.pop();
         parts.unshift('root');
-        var currentHref = './';
-        var items = parts.map((part) => {
+        let currentHref = './';
+        const items = parts.map((part) => {
             currentHref = part === 'root' ? currentHref : currentHref + part + '/';
             return {
                 name: part,
@@ -51,13 +51,13 @@ var BreadcrumbView = ItemView.extend({
     },
     openSitemap(e) {
         e.preventDefault();
-        app.rootView.getRegion('modal').show(new SitemapModalView({
+        app.getModalRegion().show(new SitemapModalView({
             collection: this.collection
         }));
     }
 });
 
-var DirectoryView = ItemView.extend({
+const DirectoryView = View.extend({
     tagName: 'li',
     template: template(`
         <a href="#/galleries/<%= path %>">
@@ -67,13 +67,13 @@ var DirectoryView = ItemView.extend({
     `)
 });
 
-var DirectoriesView = CollectionView.extend({
+const DirectoriesView = CollectionView.extend({
     tagName: 'ul',
     className: 'gallery-directories-view nav nav-pills',
     childView: DirectoryView
 });
 
-var PictureView = ItemView.extend({
+const PictureView = View.extend({
     template: template(`
         <a href="./adapted/<%= path %>">
             <div class="picture">
@@ -98,7 +98,7 @@ var PictureView = ItemView.extend({
     }
 });
 
-var PicturesView = CollectionView.extend({
+const PicturesView = CollectionView.extend({
     tagName: 'ul',
     className: 'gallery-pictures-view nav nav-pills',
     childView: PictureView,
@@ -110,7 +110,7 @@ var PicturesView = CollectionView.extend({
     }
 });
 
-export default LayoutView.extend({
+export default View.extend({
     template: template(`
         <div id="gallery-breadcrumb"></div>
         <div id="gallery-directories"></div>
@@ -122,7 +122,7 @@ export default LayoutView.extend({
         directories: '#gallery-directories',
         pictures: '#gallery-pictures'
     },
-    onBeforeShow() {
+    onBeforeAttach() {
         this.showChildView('breadcrumb', new BreadcrumbView({
             model: this.model,
             collection: this.collection
@@ -134,7 +134,7 @@ export default LayoutView.extend({
             collection: this.model.get('pictures')
         }));
     },
-    onShow() {
+    onAttach() {
         this.$el.find('img').lazyload();
     }
 });

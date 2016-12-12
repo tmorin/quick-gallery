@@ -1,7 +1,7 @@
-import {template} from '_';
-import {CompositeView, ItemView} from 'Marionette';
+import {template} from 'lodash';
+import {CompositeView, View} from 'Marionette';
 
-var PictureView = ItemView.extend({
+const PictureView = View.extend({
     template: template(`
         <div class="media-left media-middle">
             <button class="btn btn-danger btn-xs">
@@ -84,7 +84,7 @@ export default CompositeView.extend({
     initialize() {
         this.collection = this.model.get('pictures');
     },
-    onRender() {
+    onAttach() {
         this.stickit();
     },
     onShown() {

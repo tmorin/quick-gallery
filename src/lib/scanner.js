@@ -33,7 +33,7 @@ function listPictures(cwd) {
 function list(cwd, path, name, entries) {
 
     return new Promise((resolve, reject) => {
-        var entry = {
+        const entry = {
             path: path,
             name: name,
             directories: [],
@@ -41,14 +41,14 @@ function list(cwd, path, name, entries) {
         };
         entries.push(entry);
 
-        var dirPromise = listDirectories(cwd).then((subDirNames) => {
-            var promises = subDirNames.map(function (subDirName) {
+        const dirPromise = listDirectories(cwd).then((subDirNames) => {
+            const promises = subDirNames.map(function (subDirName) {
                 return list(cwd + subDirName, path + subDirName, subDirName.substring(0, subDirName.length - 1), entry.directories);
             });
             return Promise.all(promises);
         });
 
-        var picPromise = listPictures(cwd).then((subPicNames) => {
+        const picPromise = listPictures(cwd).then((subPicNames) => {
             entry.pictures = subPicNames.map(function (subPicName) {
                 return {
                     path: path + subPicName,
@@ -67,12 +67,12 @@ export function scanPictures(rootDir) {
     return list(rootDir, './', 'root', []);
 }
 export function scanDirectory(rootDir, cwd) {
-    var name = path.basename(cwd);
-    var entry = {
+    const name = path.basename(cwd);
+    const entry = {
        path: cwd,
        name: name === '.' ? 'root' : name
     };
-    var dirPromise = listDirectories(path.join(rootDir, cwd)).then(subDirNames => {
+    const dirPromise = listDirectories(path.join(rootDir, cwd)).then(subDirNames => {
         entry.directories = subDirNames.map(function (subDirName) {
             return {
                 path: cwd + subDirName,
@@ -80,7 +80,7 @@ export function scanDirectory(rootDir, cwd) {
             };
         });
     });
-    var picPromise = listPictures(path.join(rootDir, cwd)).then(subPicNames => {
+    const picPromise = listPictures(path.join(rootDir, cwd)).then(subPicNames => {
         entry.pictures = subPicNames.map(function (subPicName) {
             return {
                 path: cwd + subPicName,

@@ -1,8 +1,8 @@
-import $ from 'jQuery';
-import {template} from '_';
-import {LayoutView} from 'Marionette';
+import $ from 'jquery';
+import {template} from 'lodash';
+import {View} from 'Marionette';
 
-var CacheView = LayoutView.extend({
+const CacheView = View.extend({
     template: template(`
         <div class="panel panel-default">
             <div class="panel-heading">Cache</div>
@@ -15,8 +15,8 @@ var CacheView = LayoutView.extend({
                 <div class="alert-container">
                     <div class="alert alert-info">The cache builder is ready to run.</div>
                 </div>
-                <form name="cacheForm">
-                    <div class="row">
+                <form name='cacheForm'>
+                    <div class='row">
                         <div class="col-md-6">
                             <div class="checkbox">
                                 <label>
@@ -71,7 +71,7 @@ var CacheView = LayoutView.extend({
         'click @ui.status': 'checkCacheBuilderStatus'
     },
     refreshDirectories() {
-        var i = this.ui.refresh.find('i');
+        const i = this.ui.refresh.find('i');
         i.addClass('fa-spin');
         this.collection.fetch({
             reset: true,
@@ -81,8 +81,8 @@ var CacheView = LayoutView.extend({
         }).then().then(() => i.removeClass('fa-spin'));
     },
     updateStatus(busy) {
-        var cssClass = 'alert-danger';
-        var message = 'Unable to retrieve the cache builder status.';
+        let cssClass = 'alert-danger';
+        let message = 'Unable to retrieve the cache builder status.';
         if (busy !== undefined) {
             cssClass = busy ? 'alert-warning' : 'alert-info';
             message = busy ? 'The cache builder is running.' : 'The cache builder is ready to run.';
@@ -95,13 +95,13 @@ var CacheView = LayoutView.extend({
         this.ui.alert.empty().append($('<div>').addClass('alert ' + cssClass).text(message));
     },
     startCacheBuilder() {
-        var data = this.ui.form.serializeObject();
-        var self = this;
+        const data = this.ui.form.serializeObject();
+        const self = this;
         this.updateStatus(true);
         $.post('./api/cache', data).then(() => self.checkCacheBuilderStatus(), () => self.checkCacheBuilderStatus());
     },
     stopCacheBuilder() {
-        var self = this;
+        const self = this;
         $.ajax({
             type: 'delete',
             url: './api/cache',
@@ -109,7 +109,7 @@ var CacheView = LayoutView.extend({
         }).then(() => self.checkCacheBuilderStatus(), () => self.checkCacheBuilderStatus());
     },
     checkCacheBuilderStatus() {
-        var self = this;
+        const self = this;
         $.ajax({
             type: 'get',
             url: './api/cache',
@@ -118,12 +118,12 @@ var CacheView = LayoutView.extend({
             self.updateStatus(status && status.busy);
         });
     },
-    onShow: function () {
+    onAttach: function () {
         this.checkCacheBuilderStatus();
     }
 });
 
-var LogsView = LayoutView.extend({
+const LogsView = View.extend({
     template: template(`
         <div class="panel panel-default">
             <div class="panel-heading">Logs</div>
@@ -144,19 +144,19 @@ var LogsView = LayoutView.extend({
         'click @ui.refresh': 'refreshLogs'
     },
     refreshLogs() {
-        var self = this;
+        const self = this;
         $.ajax({
             type: 'get',
             url: './api/logs',
             dataType: 'text'
         }).then().then((payload) => self.ui.pre.text(payload));
     },
-    onShow: function () {
+    onAttach: function () {
         this.refreshLogs();
     }
 });
 
-export default LayoutView.extend({
+export default View.extend({
     template: template(`
         <div class="row">
             <div class="col-md-6 col-lg-5 admin-cache"></div>
@@ -168,7 +168,7 @@ export default LayoutView.extend({
         cache: '.admin-cache',
         logs: '.admin-logs',
     },
-    onBeforeShow: function() {
+    onBeforeAttach: function () {
         this.showChildView('cache', new CacheView({
             collection: this.model.get('directories')
         }));

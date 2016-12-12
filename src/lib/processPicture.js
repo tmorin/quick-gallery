@@ -3,15 +3,15 @@ import path from 'path';
 import C from './config';
 import _gm from 'gm';
 
-var gm = _gm.subClass({
+const gm = _gm.subClass({
     imageMagick: true,
     appPath: C.IMAGEMAGICK_PATH
 });
 
 function resolveScale(w, h, maxW, maxH) {
-    var scale = 1;
-    var wScale = scale;
-    var hScale = scale;
+    let scale = 1;
+    let wScale = scale;
+    let hScale = scale;
     if (w > maxW) {
         wScale = maxW / w;
     }
@@ -40,7 +40,7 @@ export default function (picPath, destPath, width, height) {
     return new Promise((resolve, reject) => {
         mkdirp.sync(path.dirname(destPath));
         getSize(picPath).then(function (dim) {
-            var scale = resolveScale(dim.width, dim.height, width, height);
+            const scale = resolveScale(dim.width, dim.height, width, height);
             gm(picPath).autoOrient().resize(dim.width * scale, dim.height * scale).write(destPath, (err) => {
                 if (err) {
                     reject(err);

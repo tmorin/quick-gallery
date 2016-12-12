@@ -1,11 +1,11 @@
-import app from 'app';
-import * as $ from 'jQuery';
-import {template} from '_';
-import {Collection} from 'Backbone';
-import {CompositeView, ItemView, LayoutView} from 'Marionette';
-import {fixAndGetModalBodyHeight} from './utils';
+import $ from "jquery";
+import {template} from "lodash";
+import {Collection} from "Backbone";
+import {CompositeView, View} from "Marionette";
+import app from "../app";
+import {fixAndGetModalBodyHeight} from "../utils";
 
-var HeaderView = ItemView.extend({
+const HeaderView = View.extend({
     template: template(`
         <h4>
             <i class="text-muted fa fa-fw fa-file-picture-o"></i>
@@ -18,7 +18,7 @@ var HeaderView = ItemView.extend({
             </div>
         </h4>
     `),
-    templateHelpers() {
+    templateContext() {
         return {
             currentPicIndex: this.model.collection.indexOf(this.model) + 1,
             picsCounter: this.model.collection.length
@@ -26,7 +26,7 @@ var HeaderView = ItemView.extend({
     }
 });
 
-var BodyView = ItemView.extend({
+const BodyView = View.extend({
     template: template(`
         <i class="text-muted fa fa-fw fa-spinner fa-spin fa-4x"></i>
         <img class="img img-responsive img-rounded" src="./adapted/<%= path %>">
@@ -37,14 +37,14 @@ var BodyView = ItemView.extend({
     },
     onRender() {
         this.ui.img.css('max-height', this.options.maxHeight);
-        this.ui.img.hide().load(() => {
+        this.ui.img.hide().one('load', () => {
             this.ui.spinner.hide();
             this.ui.img.fadeIn(500);
         });
     }
 });
 
-var FooterThumbnailView = ItemView.extend({
+const FooterThumbnailView = View.extend({
     template: template(`
         <% if(disabled) { %>
             <img src="./thumbnails/<%= path %>" alt="<%= name %>" class="img-responsive selected">
@@ -52,7 +52,7 @@ var FooterThumbnailView = ItemView.extend({
             <a href=""><img src="./thumbnails/<%= path %>" alt="<%= name %>" class="img-responsive"></a>
         <% } %>
     `),
-    templateHelpers() {
+    templateContext() {
         return {
             disabled: this.options.current.id === this.model.id
         };
@@ -67,7 +67,7 @@ var FooterThumbnailView = ItemView.extend({
     }
 });
 
-var FooterThumbnailsView = CompositeView.extend({
+const FooterThumbnailsView = CompositeView.extend({
     template: template(``),
     tagName: 'ul',
     className: 'list-inline',
@@ -88,7 +88,7 @@ var FooterThumbnailsView = CompositeView.extend({
     }
 });
 
-var FooterActionsView = ItemView.extend({
+const FooterActionsView = View.extend({
     template: template(`
         <button class="basket btn btn-default <%= active ? 'active' : '' %>" type="button" data-toggle="button" aria-pressed="false" autocomplete="off">
             <i class="fa fa-fw fa-cart-plus"></i>
@@ -103,7 +103,7 @@ var FooterActionsView = ItemView.extend({
             <i class="fa fa-fw fa-chevron-right"></i>
         </button>
     `),
-    templateHelpers() {
+    templateContext() {
         return {
             active: !!this.options.basketPictures.get(this.model.id)
         };
@@ -134,7 +134,7 @@ var FooterActionsView = ItemView.extend({
         }
         if (this.model !== nextPicNode) {
             this.model = nextPicNode;
-            this.triggerMethod('show:media');
+            this.triggerMethod('show:media', nextPicNode);
         }
     },
     onShowPreviousMedia() {
@@ -146,7 +146,7 @@ var FooterActionsView = ItemView.extend({
         }
         if (this.model !== nextPicNode) {
             this.model = nextPicNode;
-            this.triggerMethod('show:media');
+            this.triggerMethod('show:media', nextPicNode);
         }
     },
     onToggleBasket() {
@@ -159,7 +159,7 @@ var FooterActionsView = ItemView.extend({
     }
 });
 
-export default LayoutView.extend({
+export default View.extend({
     template: template(`
         <div class="modal-dialog">
             <div class="modal-content">

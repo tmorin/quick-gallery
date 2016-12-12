@@ -67,11 +67,11 @@ export function listAllPictures() {
 
 function processPictures(pictures, baseDestPath, width, height) {
     L.profile('cache builder -> process pictures');
-    var total = pictures.length;
-    var done = 0;
-    var processPictureWrapper = (item, callback) => {
-        var picPath = C.PICS_DIR + item;
-        var destPath = baseDestPath + item;
+    const total = pictures.length;
+    let done = 0;
+    const processPictureWrapper = (item, callback) => {
+        const picPath = C.PICS_DIR + item;
+        const destPath = baseDestPath + item;
         ++done;
         L.info('%s/%s - process %s', total, done, destPath);
         fs.lstat(destPath, (err) => {
@@ -89,7 +89,7 @@ function processPictures(pictures, baseDestPath, width, height) {
         });
     };
     return new Promise(function (resolve, reject) {
-        var q = async.queue(processPictureWrapper, C.CACHE_BUILDER_WORKERS);
+        const q = async.queue(processPictureWrapper, C.CACHE_BUILDER_WORKERS);
         q.drain = () => {
             L.profile('cache builder -> process pictures');
             q.kill();

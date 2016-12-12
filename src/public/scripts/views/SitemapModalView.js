@@ -1,8 +1,8 @@
-import {template} from '_';
-import {LayoutView} from 'Marionette';
+import {template} from 'lodash';
+import {View} from 'Marionette';
 import GalleriesTreeView from './GalleriesTreeView';
 
-export default LayoutView.extend({
+export default View.extend({
     template: template(`
         <div class="modal-dialog">
             <div class="modal-content">
@@ -31,7 +31,7 @@ export default LayoutView.extend({
     closeModal() {
         this.$el.modal('hide');
     },
-    onBeforeShow() {
+    onBeforeAttach() {
         this.showChildView('tree', new GalleriesTreeView({
             collection: this.collection
         }));

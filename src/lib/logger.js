@@ -5,23 +5,24 @@ import C from './config';
 
 mkdirp.sync(path.dirname(C.LOG_PATH));
 
-var root = new(winston.Logger)({
+const root = new (winston.Logger)({
     transports: [
-        new(winston.transports.Console)({
+        new (winston.transports.Console)({
             name: 'all-console',
             colorize: true,
             prettyPrint: true,
             timestamp: true,
             humanReadableUnhandledException: true
         }),
-        new(winston.transports.DailyRotateFile)({
+        new (winston.transports.File)({
             name: 'all-file',
             colorize: false,
             prettyPrint: true,
             timestamp: true,
             json: false,
-            humanReadableUnhandledException: true,
+            tailable: true,
             maxFiles: 2,
+            maxsize: 1000 * 10 * 10,
             filename: C.LOG_PATH
         })
     ]

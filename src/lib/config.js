@@ -2,7 +2,7 @@ import path from 'path';
 import os from 'os';
 import parseArgs from 'minimist';
 
-var CONSTANTS = {
+const CONSTANTS = {
     PICS_DIR: null,
     CACHE_DIR: null,
     ADAPTED_MAX_WIDTH: 1000,
@@ -17,21 +17,22 @@ var CONSTANTS = {
 
 function resolveValueFromNpmConfig(defaultValues) {
     return Object.keys(defaultValues).reduce((a, b) => {
-        a[b] = process.env['npm_package_config_quick_gallery_' + b.toLowerCase()] || defaultValues[b];
+        a[b] = process.env['npm_package_config_' + b.toLowerCase()] || defaultValues[b];
         return a;
     }, {});
 }
 
 function resolveValueFromEnv(defaultValues) {
     return Object.keys(defaultValues).reduce((a, b) => {
+        console.log(b, process.env['QUICK_GALLERY_' + b]);
         a[b] = process.env['QUICK_GALLERY_' + b] || defaultValues[b];
         return a;
     }, {});
 }
 
 function resolveValueFromArgs(defaultValues, args) {
-    var formatedArgs = Object.keys(args).reduce((a, b) => {
-        var argName = b.toUpperCase().replace(/-/g, '_');
+    const formatedArgs = Object.keys(args).reduce((a, b) => {
+        const argName = b.toUpperCase().replace(/-/g, '_');
         a[argName] = args[b];
         return a;
     }, {});
@@ -41,24 +42,24 @@ function resolveValueFromArgs(defaultValues, args) {
     }, {});
 }
 
-var values = resolveValueFromNpmConfig(resolveValueFromArgs(resolveValueFromEnv(CONSTANTS), parseArgs(process.argv.slice(2))));
+const values = resolveValueFromNpmConfig(resolveValueFromArgs(resolveValueFromEnv(CONSTANTS), parseArgs(process.argv.slice(2))));
 
-var errors = [];
+const errors = [];
 
-if (!values.CACHE_DIR) {
+if (!values.CACHE_DIR || values.CACHE_DIR === 'null') {
     errors.push('QUICK_GALLERY_CACHE_DIR is not defined!');
 }
 
-if (!values.PICS_DIR) {
+if (!values.PICS_DIR || values.PICS_DIR === 'null') {
     errors.push('QUICK_GALLERY_PICS_DIR is not defined!');
 }
 
-if (!values.IMAGEMAGICK_PATH) {
+if (!values.IMAGEMAGICK_PATH || values.IMAGEMAGICK_PATH === 'null') {
     errors.push('QUICK_GALLERY_IMAGEMAGICK_PATH is not defined!');
 }
 
 if (errors.length > 0) {
-    throw new Error(errors.join('\n'));
+    throw new Error(`unable to start because:\n${errors.join('\n')}`);
 }
 
 values.CACHE_DIR = path.normalize(values.CACHE_DIR + '/').replace(/\\/g, '/');

@@ -1,32 +1,49 @@
-import {history} from 'Backbone';
-import {Application, LayoutView, Region} from 'Marionette';
+import {history} from "Backbone";
+import {template} from "lodash";
+import {Application, View, Region} from "Marionette";
 
-var ModalRegion = Region.extend({
+const ModalRegion = Region.extend({
     el: '#modal',
-    onShow(view) {
-        var self = this;
-        view.$el.modal('show').on('hidden.bs.modal', function () {
-            self.empty();
-        });
+    onShow(region, view, options) {
+        console.log('onShow', view);
+        view.$el.modal('show').on('hidden.bs.modal', () => this.empty());
     },
     onBeforeEmpty(view) {
         view.$el.data('bs.modal', null);
     }
 });
 
-var RootView = LayoutView.extend({
-    el: 'body',
+const RootView = View.extend({
+    template: template(`
+        <div id="root"></div>
+        <div id="modal"></div>
+    `),
+    tagName: 'main',
     regions: {
         root: '#root',
         modal: ModalRegion
     }
 });
 
-var app = new Application();
+const rootView = new RootView();
 
-app.rootView = new RootView();
+const App = Application.extend({
+    region: 'body',
+    rootView: rootView,
+    onBeforeStart() {
+        this.showView(rootView);
+    },
+    getModalRegion() {
+        return this.getRegion().currentView.getRegion('modal');
+    },
+    getRootRegion() {
+        return this.getRegion().currentView.getRegion('root');
+    }
+});
 
-app.on('start', function(options){
+const app = new App();
+
+app.on('start', function (options) {
     history.start();
 });
 

@@ -1,14 +1,14 @@
 import childProcess from 'child_process';
 import L from './logger';
 
-var ref;
+let ref;
 
 export function isBusy() {
     return !!ref;
 }
 
 export function start(args = []) {
-    var formattedArgs = Object.keys(args).reduce(function (a, b) {
+    const formattedArgs = Object.keys(args).reduce(function (a, b) {
         if (args[b] && args[b] !== 'false') {
             a.push('--' + b);
         }

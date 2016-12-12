@@ -1,7 +1,7 @@
-import * as $ from 'jQuery';
+import $ from 'jquery';
 import {LocalStorage, Collection, Model} from 'Backbone';
 
-export var Context = Model.extend({
+export const Context = Model.extend({
     localStorage: new LocalStorage('Context'),
     initialize() {
         this.set({
@@ -11,7 +11,7 @@ export var Context = Model.extend({
     }
 });
 
-export var Basket = Model.extend({
+export const Basket = Model.extend({
     defaults: {
         name: '',
         flatten: false
@@ -22,7 +22,7 @@ export var Basket = Model.extend({
         });
     },
     download() {
-        var params = $.param({
+        let params = $.param({
             name: this.get('name'),
             pictures: this.get('pictures').map((picture) => picture.get('path')),
             flatten: this.get('flatten')
@@ -36,15 +36,15 @@ export var Basket = Model.extend({
     }
 });
 
-export var Picture = Model.extend({
+export const Picture = Model.extend({
     idAttribute: 'path'
 });
 
-export var Pictures = Collection.extend({
+export const Pictures = Collection.extend({
     model: Picture
 });
 
-export var Directory = Model.extend({
+export const Directory = Model.extend({
 
     idAttribute: 'path',
 
@@ -65,7 +65,7 @@ export var Directory = Model.extend({
 
 });
 
-export var Directories = Collection.extend({
+export const Directories = Collection.extend({
 
     model: Directory,
 
@@ -81,12 +81,12 @@ export var Directories = Collection.extend({
         if (!path) {
             return;
         }
-        var parts = path.split('/');
-        var currentPath = this.cwd + parts.shift() + '/';
-        var nextPath = parts.join('/');
-        var directory = this.get(currentPath);
+        const parts = path.split('/');
+        const currentPath = this.cwd + parts.shift() + '/';
+        const nextPath = parts.join('/');
+        const directory = this.get(currentPath);
         if (nextPath) {
-            return directory.get('directories').getDirectory(nextPath); 
+            return directory.get('directories').getDirectory(nextPath);
         }
         return directory;
     }
