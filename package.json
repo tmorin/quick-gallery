@@ -25,10 +25,10 @@
     "clean": "rimraf bin lib public *.tgz",
     "build:lib": "babel src/lib --out-dir lib",
     "build:bin": "babel src/bin --out-dir bin",
-    "build:public": "webpack --config webpack.config.production.js",
+    "build:public": "webpack --config config.js --optimize-minimize --define process.env.NODE_ENV='production'",
     "watch:srv": "nodemon --watch src/lib --exec babel-node src/lib/server.js",
-    "watch:site": "webpack-dev-server --config webpack.config.development.js --inline --hot",
-    "build": "npm run build:bin && npm run build:lib && npm run build:public",
+    "watch:site": "webpack-dev-server --config config.js --inline --hot",
+    "build": "npm run clean && npm run build:bin && npm run build:lib && npm run build:public",
     "postversion": "git push && git push --tags",
     "prepublish": "npm run build",
     "start:srv": "node lib/server.js",
@@ -46,38 +46,67 @@
     "thumbnail_max_height": 120,
     "imagemagick_path": "/usr/bin"
   },
+  "babel": {
+    "presets": [
+      [
+        "env",
+        {
+          "targets": {
+            "browsers": [
+              "last 5 versions"
+            ]
+          }
+        }
+      ]
+    ],
+    "plugins": [
+      "idomizer/lib/plugins/babel-idomizer.js"
+    ]
+  },
   "license": "MIT",
   "devDependencies": {
     "babel-cli": "^6.18.0",
+    "babel-core": "^6.23.1",
     "babel-loader": "^6.2.9",
-    "babel-preset-es2015": "^6.18.0",
+    "babel-preset-env": "^1.1.11",
+    "ceb": "^1.0.0",
     "css-loader": "^0.26.1",
-    "file-loader": "^0.9.0",
+    "dialog-polyfill": "^0.4.7",
+    "file-loader": "^0.10.0",
     "font-awesome": "^4.3.0",
     "html-webpack-plugin": "^2.24.1",
+    "idomizer": "^0.7.0",
+    "incremental-dom": "^0.5.1",
     "less": "^2.7.1",
     "less-loader": "^2.2.3",
     "less-plugin-autoprefix": "^1.4.2",
     "less-plugin-clean-css": "^1.5.0",
+    "navigo": "^4.0.1",
     "nodemon": "^1.11.0",
-    "pug": "^2.0.0-beta6",
+    "pug": "^2.0.0-beta11",
     "pug-loader": "^2.3.0",
+    "qs": "^6.3.1",
     "raw-loader": "^0.5.1",
     "style-loader": "^0.13.1",
     "url-loader": "^0.5.7",
-    "webpack": "^1.14.0",
-    "webpack-dev-server": "^1.16.2",
+    "webcomponents.js": "^0.7.24",
+    "webpack": "^2.2.1",
+    "webpack-dev-server": "^2.4.1",
     "whatwg-fetch": "^2.0.1"
   },
   "dependencies": {
     "async": "^2.1.4",
+    "babel-polyfill": "^6.23.0",
     "body-parser": "^1.12.4",
     "express": "^4.12.4",
     "glob": "^7.1.1",
     "gm": "^1.18.1",
+    "immutable": "^3.8.1",
     "jszip": "^3.1.3",
     "minimist": "^1.1.1",
     "mkdirp": "^0.5.1",
+    "redux": "^3.6.0",
+    "redux-thunk": "^2.2.0",
     "rimraf": "^2.5.4",
     "walk": "^2.3.9",
     "winston": "^2.3.0"

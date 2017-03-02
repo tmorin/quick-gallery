@@ -52,7 +52,8 @@ function list(cwd, path, name, entries) {
             entry.pictures = subPicNames.map(function (subPicName) {
                 return {
                     path: path + subPicName,
-                    name: subPicName
+                    name: subPicName,
+                    type: 'pictures'
                 };
             });
             return entry;

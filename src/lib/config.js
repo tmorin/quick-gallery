@@ -24,7 +24,6 @@ function resolveValueFromNpmConfig(defaultValues) {
 
 function resolveValueFromEnv(defaultValues) {
     return Object.keys(defaultValues).reduce((a, b) => {
-        console.log(b, process.env['QUICK_GALLERY_' + b]);
         a[b] = process.env['QUICK_GALLERY_' + b] || defaultValues[b];
         return a;
     }, {});
@@ -42,7 +41,7 @@ function resolveValueFromArgs(defaultValues, args) {
     }, {});
 }
 
-const values = resolveValueFromNpmConfig(resolveValueFromArgs(resolveValueFromEnv(CONSTANTS), parseArgs(process.argv.slice(2))));
+const values = resolveValueFromArgs(resolveValueFromEnv(resolveValueFromNpmConfig(CONSTANTS)), parseArgs(process.argv.slice(2)));
 
 const errors = [];
 

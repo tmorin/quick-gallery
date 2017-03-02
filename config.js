@@ -1,5 +1,5 @@
 const path = require('path');
-const webpack = require('webpack');
+const webpack = require("webpack");
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const pkg = require('./package.json');
 
@@ -13,15 +13,28 @@ module.exports = {
         path: path.join(__dirname, 'public'),
         filename: '[name].[hash].js'
     },
+    module: {
+        rules: [
+            {test: /\.js$/, exclude: /node_modules/, loader: "babel-loader"},
+            {test: /\.pug$/, loader: "pug-loader"},
+            {test: /\.woff(\?v=\d+\.\d+\.\d+)?$/, loader: 'url-loader?limit=10000&mimetype=application/font-woff'},
+            {test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/, loader: 'url-loader?limit=10000&mimetype=application/font-woff'},
+            {test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/, loader: 'url-loader?limit=10000&mimetype=application/octet-stream'},
+            {test: /\.eot(\?v=\d+\.\d+\.\d+)?$/, loader: 'file-loader'},
+            {test: /\.svg(\?v=\d+\.\d+\.\d+)?$/, loader: 'url-loader?limit=10000&mimetype=image/svg+xml'},
+            {test: /\.css$/, loader: 'style-loader!css-loader'},
+            {test: /\.less/, loader: 'style-loader!css-loader!less-loader'},
+            {test: /\.(png|jpg)$/, loader: 'url-loader?limit=25000'}
+        ]
+    },
     plugins: [
-        new webpack.optimize.OccurenceOrderPlugin(),
         new webpack.optimize.CommonsChunkPlugin({
             name: 'commons',
             filename: 'commons.[hash].js'
         }),
         new HtmlWebpackPlugin({
             template: './src/public/tpl.pug',
-            inject: 'head',
+            inject: 'body',
             chunks: ['commons', 'gallery'],
             filename: 'index.html',
             minify: {
@@ -32,7 +45,7 @@ module.exports = {
         }),
         new HtmlWebpackPlugin({
             template: './src/public/tpl.pug',
-            inject: 'head',
+            inject: 'body',
             chunks: ['commons', 'admin'],
             filename: 'admin.html',
             minify: {
@@ -43,7 +56,7 @@ module.exports = {
         }),
         new HtmlWebpackPlugin({
             template: './src/public/tpl.pug',
-            inject: 'head',
+            inject: 'body',
             chunks: ['commons', 'basket'],
             filename: 'basket.html',
             minify: {
@@ -53,24 +66,6 @@ module.exports = {
             pkg: pkg
         })
     ],
-    module: {
-        loaders: [
-            {test: /\.pug?$/, loader: 'pug'},
-            {test: /\.js?$/, exclude: /node_modules/, loader: 'babel'},
-            {test: /\.woff(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=10000&mimetype=application/font-woff'},
-            {test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=10000&mimetype=application/font-woff'},
-            {test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=10000&mimetype=application/octet-stream'},
-            {test: /\.eot(\?v=\d+\.\d+\.\d+)?$/, loader: 'file'},
-            {test: /\.svg(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=10000&mimetype=image/svg+xml'},
-            {test: /\.css$/, loader: 'style!css'},
-            {test: /\.less/, loader: 'style!css!less'},
-            {test: /\.html/, loader: 'raw'},
-            {test: /\.(png|jpg)$/, loader: 'url?limit=25000'}
-        ]
-    },
-    resolve: {
-        alias: {}
-    },
     devServer: {
         contentBase: 'public',
         noInfo: false,
@@ -89,4 +84,5 @@ module.exports = {
             }
         }
     }
-};
+}
+;
