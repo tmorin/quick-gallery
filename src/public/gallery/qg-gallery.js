@@ -1,4 +1,4 @@
-import {element, method} from 'ceb';
+import {element, property, method, toArray} from 'ceb';
 import idomify from '../idomify';
 import {fromJS} from 'immutable';
 
@@ -40,15 +40,7 @@ element().builders(
                 </li>
             </tpl-each>
         </ul>
-        <ul>
-            <tpl-each items="data.getIn(['pictures'])">
-                <li>
-                    <a href="#/{{ data.getIn(['current', 'path']) }}?media={{ item.getIn(['name']) }}">
-                        <img src="thumbnails/pictures/{{ item.getIn(['path']) }}" alt="thumbnails of {{ item.getIn(['path']) }}" title="{{ item.getIn(['name']) }}" />
-                    </a>
-                </li>
-            </tpl-each>
-        </ul>
+        <qa-gallery-items items="{{ data.getIn(['pictures'], helpers.fromJS([])).toJS() }}" />
     `).watch('state', 'current', 'directories', 'pictures'),
 
     method('createdCallback').invoke(el => {
@@ -85,6 +77,78 @@ element().builders(
     })
 ).register('qa-gallery');
 
+element().builders(
+    property('items').setter((el, items) => {
+        el.innerHTML = '';
+        const promises = items.map(item => {
+            return new Promise(resolve => {
+                const mPath = item.path;
+                const dPath = mPath.substring(0, mPath.lastIndexOf('/') + 1);
+                const a = document.createElement('a');
+                a.href = `#/${dPath}?media=${mPath}`;
+
+                const img = document.createElement('img');
+                a.appendChild(img);
+                img.src = `thumbnails/${item.type}/${item.path}`;
+                img.alt = `thumbnail of ${item.path}`;
+                img.title = item.name;
+                img.onload = () => {
+                    img.dataset.width = img.width;
+                    img.dataset.height = img.height;
+                    resolve(a);
+                };
+                img.onerror = () => resolve(a);
+            });
+        });
+
+        const maxWidth = 200;
+        const maxHeight = 200;
+        const containerWidth = el.getBoundingClientRect().width;
+        const rows = [];
+        let cRowIndex = 0;
+        let cRowWidth = 0;
+        promises.forEach((p, i) => p.then(a => {
+            const img = a.childNodes[0];
+            let itemWidth = parseInt(img.dataset.width);
+            let itemHeight = parseInt(img.dataset.height);
+
+            let newRowWidth = cRowWidth + itemWidth;
+
+            if (newRowWidth < containerWidth) {
+                cRowWidth = newRowWidth;
+            } else {
+                cRowIndex++;
+                cRowWidth = itemWidth;
+            }
+
+            if (!rows[cRowIndex]) {
+                const pRow = rows[cRowIndex - 1];
+                toArray(pRow.querySelector('img')).forEach(img => {
+                    console.log();
+                });
+
+                rows[cRowIndex] = document.createElement('div');
+                el.appendChild(rows[cRowIndex]);
+            }
+            rows[cRowIndex].appendChild(a);
+
+            return promises[i];
+        }));
+
+    })
+).register('qa-gallery-items');
+
+element().builders(
+    property('media').setter((el, media) => {
+        const img = document.createElement('img');
+        img.src = `thumbnails/${media.type}/${media.path}`;
+        img.alt = `thumbnail of ${media.path}`;
+        img.title = media.name;
+        img.onload = () => {
+            el.appendChild(img);
+        }
+    })
+).register('qa-thumbnail');
 
 element().builders(
     idomify(idomizer`
