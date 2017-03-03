@@ -48,9 +48,9 @@ export function clean(thumbnails, adapted) {
 export function listAllPictures() {
     L.profile('cache builder -> list all pictures');
     return new Promise((resolve, reject) => {
-        L.info('list pictures from %s', C.PICS_DIR);
+        L.info('list pictures from %s', C.MEDIA_DIR);
         glob('**/*.{jpg,jpeg,png,gif,tif,tiff,bmp,dib,webp}', {
-            cwd: C.PICS_DIR,
+            cwd: C.MEDIA_DIR,
             nodir: true,
             nocase: true
         }, function (e, pictures) {
@@ -70,7 +70,7 @@ function processPictures(pictures, baseDestPath, width, height) {
     const total = pictures.length;
     let done = 0;
     const processPictureWrapper = (item, callback) => {
-        const picPath = C.PICS_DIR + item;
+        const picPath = C.MEDIA_DIR + item;
         const destPath = baseDestPath + item;
         ++done;
         L.info('%s/%s - process %s', total, done, destPath);

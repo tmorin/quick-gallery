@@ -3,7 +3,7 @@ import os from 'os';
 import parseArgs from 'minimist';
 
 const CONSTANTS = {
-    PICS_DIR: null,
+    MEDIA_DIR: null,
     CACHE_DIR: null,
     ADAPTED_MAX_WIDTH: 1000,
     ADAPTED_MAX_HEIGHT: 1000,
@@ -49,8 +49,8 @@ if (!values.CACHE_DIR || values.CACHE_DIR === 'null') {
     errors.push('QUICK_GALLERY_CACHE_DIR is not defined!');
 }
 
-if (!values.PICS_DIR || values.PICS_DIR === 'null') {
-    errors.push('QUICK_GALLERY_PICS_DIR is not defined!');
+if (!values.MEDIA_DIR || values.MEDIA_DIR === 'null') {
+    errors.push('QUICK_GALLERY_MEDIA_DIR is not defined!');
 }
 
 if (!values.IMAGEMAGICK_PATH || values.IMAGEMAGICK_PATH === 'null') {
@@ -62,7 +62,7 @@ if (errors.length > 0) {
 }
 
 values.CACHE_DIR = path.normalize(values.CACHE_DIR + '/').replace(/\\/g, '/');
-values.PICS_DIR = path.normalize(values.PICS_DIR + '/').replace(/\\/g, '/');
+values.MEDIA_DIR = path.normalize(values.MEDIA_DIR + '/').replace(/\\/g, '/');
 values.IMAGEMAGICK_PATH = path.normalize(values.IMAGEMAGICK_PATH + '/').replace(/\\/g, '/');
 values.THUMBNAIL_DIR = values.CACHE_DIR + 'thumbnail/';
 values.ADAPTED_DIR = values.CACHE_DIR + 'adapted/';

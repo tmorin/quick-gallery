@@ -19,7 +19,7 @@ app.use(bodyParser.urlencoded({
 
 app.use(express.static(__dirname + '/../public'));
 
-app.use('/raw/pictures', express.static(C.PICS_DIR));
+app.use('/raw/pictures', express.static(C.MEDIA_DIR));
 app.get('/thumbnails/pictures/(*)', (req, res) => {
     const thumbnailPath = path.join(C.THUMBNAIL_DIR, req.params[0]);
     fs.lstat(thumbnailPath, function (error, stat) {
@@ -71,7 +71,7 @@ app.get('/api/basket', (req, res) => {
         if (flatten) {
             filename = picPath.replace(/\//g, '_');
         }
-        zip.file(filename, fs.readFileSync(C.PICS_DIR + picPath));
+        zip.file(filename, fs.readFileSync(C.MEDIA_DIR + picPath));
     });
     zip.generateAsync({
         type: 'nodebuffer'
@@ -87,7 +87,7 @@ app.get('/api/media', (req, res) => {
     if (pictures && req.query.refresh !== 'true') {
         res.json(pictures);
     } else {
-        scanPictures(C.PICS_DIR).then(
+        scanPictures(C.MEDIA_DIR).then(
             scannedPictures => res.json(scannedPictures[0]),
             error => res.status(500).send(error)
         );
@@ -96,7 +96,7 @@ app.get('/api/media', (req, res) => {
 
 app.get('/api/directory/(*)', (req, res) => {
     const directoryPath = (req.params[0] || '.') + '/';
-    scanDirectory(C.PICS_DIR, directoryPath).then(
+    scanDirectory(C.MEDIA_DIR, directoryPath).then(
         scannedDirectory => res.json(scannedDirectory),
         error => res.status(500).send(error)
     );
