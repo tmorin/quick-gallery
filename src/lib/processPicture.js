@@ -40,8 +40,24 @@ export default function (picPath, destPath, width, height) {
     return new Promise((resolve, reject) => {
         mkdirp.sync(path.dirname(destPath));
         getSize(picPath).then(function (dim) {
-            const scale = resolveScale(dim.width, dim.height, width, height);
-            gm(picPath).autoOrient().resize(dim.width * scale, dim.height * scale).write(destPath, (err) => {
+            let scale = 1;
+            let newWidth = dim.width;
+            let newHeight = dim.height;
+            if (width && height) {
+                scale = resolveScale(dim.width, dim.height, width, height);
+                newWidth = dim.width * scale;
+                newHeight = dim.height * scale;
+            } else if (width) {
+                scale = dim.width / dim.height;
+                newWidth = width;
+                newHeight = dim.height * scale;
+            } else if (height) {
+                scale = dim.width / dim.height;
+                newWidth = dim.width * scale;
+                newHeight = height;
+            }
+
+            gm(picPath).autoOrient().resize(newWidth, newHeight).write(destPath, (err) => {
                 if (err) {
                     reject(err);
                 } else {

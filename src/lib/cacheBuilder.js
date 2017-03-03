@@ -101,7 +101,7 @@ function processPictures(pictures, baseDestPath, width, height) {
 
 export function processThumbnails(pictures) {
     L.info('process %s thumbnails', pictures.length);
-    return processPictures(pictures, C.THUMBNAIL_DIR, C.THUMBNAIL_MAX_WIDTH, C.THUMBNAIL_MAX_HEIGHT).then(() => {
+    return processPictures(pictures, C.THUMBNAIL_DIR, 0, C.THUMBNAIL_MAX_HEIGHT).then(() => {
         L.info('%s thumbnails processed!', pictures.length);
         return pictures;
     });

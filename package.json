@@ -60,7 +60,15 @@
       ]
     ],
     "plugins": [
-      "idomizer/lib/plugins/babel-idomizer.js"
+      [
+        "idomizer/lib/plugins/babel-idomizer.js",
+        {
+          "varDataName": "state",
+          "varHelpersName": "_",
+          "skipExceptions": "true",
+          "pretty": "true"
+        }
+      ]
     ]
   },
   "license": "MIT",
@@ -82,7 +90,6 @@
     "less-loader": "^2.2.3",
     "less-plugin-autoprefix": "^1.4.2",
     "less-plugin-clean-css": "^1.5.0",
-    "navigo": "^4.0.1",
     "nodemon": "^1.11.0",
     "pug": "^2.0.0-beta11",
     "pug-loader": "^2.3.0",

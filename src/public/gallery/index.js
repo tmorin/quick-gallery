@@ -1,27 +1,8 @@
 import '../main';
-import qs from 'qs';
-import Navigo from 'navigo';
 import './qg-gallery';
 import ws from '../ws';
-
-function getQueryParams() {
-    const hash = location.hash;
-    const index = hash.indexOf('?');
-    return index >= 0 ? qs.parse(hash.substring(index + 1)) : {};
-}
-
-const router = new Navigo(null, true);
-router.on(/\/(.*)\/?\??/, (arg) => {
-    const path = arg.lastIndexOf('/') === arg.length - 1 ? arg : arg + '/';
-    const params = getQueryParams();
-    document.querySelector('qa-gallery').show(path);
-    if (params.media) {
-        document.querySelector('qa-player').show(path, params.media);
-    } else {
-        document.querySelector('qa-player').hide();
-    }
-});
-router.notFound(() => router.navigate('/./'));
+import route from '../router';
+import {findDirectory, findMedia} from '../utils';
 
 document.querySelector('main').innerHTML = `
     <qa-gallery></qa-gallery>
@@ -29,11 +10,18 @@ document.querySelector('main').innerHTML = `
 `;
 
 window.addEventListener('WebComponentsReady', () => {
-    ws.getMedia(true)
-        .then(root => {
-            document.querySelector('qa-gallery').root = root;
-            document.querySelector('qa-player').root = root;
-        })
-        .then(() => router.resolve())
-        .catch(error => console.log(error))
+    ws.getMedia(true).then(root => {
+
+        route(/\/(.*)\/?/, (path, [directoryPath], params) => {
+            const directory = findDirectory(root, directoryPath);
+            document.querySelector('qa-gallery').show(root, directory);
+            if (params.media) {
+                const media = findMedia(root, directory, params.media);
+                document.querySelector('qa-player').show(directory, media);
+            }
+        });
+
+        route.start('/' + root.path)
+
+    });
 });
